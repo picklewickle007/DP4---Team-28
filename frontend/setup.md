@@ -115,6 +115,7 @@ frontend/
 │   └── index.css            # Global styles
 ```
 everything else isn't of importance to you!
+
 ---
 
 ## Routing (Important)
