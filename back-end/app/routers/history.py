@@ -11,3 +11,4 @@ router = APIRouter(prefix="/history", tags=["History"])
 #get all history!
 @router.get("/", response_model=list[History])
 def get_history(session: Session = Depends(get_session)):
+    pass

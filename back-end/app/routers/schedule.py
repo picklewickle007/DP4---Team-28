@@ -6,14 +6,16 @@ from app.models import Schedule
 
 router = APIRouter(prefix="/schedule", tags=["Schedule"])
 
-#EXAMPLES! CHANGE THESE TO FIT YOUR NEEDS
 @router.post("/", response_model=Schedule)
 def create_scheduled_task(task: Schedule, session: Session = Depends(get_session)):
-    return
+    session.add(task)
+    session.commit()
+    session.refresh(task)
+    return task
 
 @router.get("/", response_model=list[Schedule])
 def get_schedule(session: Session = Depends(get_session)):
-    query = text("SELECT id, task, patient_name FROM schedule;")
+    query = text("SELECT id, task FROM schedule;")
     results = session.execute(query).fetchall()
     return results
 
