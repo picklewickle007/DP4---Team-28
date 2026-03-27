@@ -4,7 +4,11 @@ from sqlmodel import SQLModel, Field
 class Schedule(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     task: str
+    time: str
+    date: str
 
 class History(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     task: str
+    time: str
+    date: str
