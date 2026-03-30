@@ -9,7 +9,7 @@ router = APIRouter(prefix="/psw-home", tags=["PSW-Home"])
 @router.get("/queue/next")
 def get_next_in_queue(token: str, session: Session = Depends(get_session)):
     get_current_psw(token)
-    query = select(PSWQueue).order_by(PSWQueue.priority.desc(), PSWQueue.id)
+    query = select(PSWQueue).where(PSWQueue.priority == 0).order_by(PSWQueue.id)
     next_patient = session.exec(query).first()
     if not next_patient:
         raise HTTPException(status_code=404, detail="Queue is empty")
@@ -24,3 +24,22 @@ def complete_queue_task(queue_id: int, token: str, session: Session = Depends(ge
     session.delete(queue_entry)
     session.commit()
     return {"message": f"Patient {queue_entry.patient_name} has been removed from the queue"}
+
+@router.get("/queue/emergency")
+def get_emergency_queue(token: str, session: Session = Depends(get_session)):
+    get_current_psw(token)
+    query = select(PSWQueue).where(PSWQueue.priority == 1).order_by(PSWQueue.id)
+    next_patient = session.exec(query).first()
+    if not next_patient:
+        raise HTTPException(status_code=404, detail="No emergencies in queue")
+    return next_patient
+
+@router.post("/queue/emergency/complete/{queue_id}")
+def complete_emergency_task(queue_id: int, token: str, session: Session = Depends(get_session)):
+    get_current_psw(token)
+    queue_entry = session.get(PSWQueue, queue_id)
+    if not queue_entry:
+        raise HTTPException(status_code=404, detail="Queue entry not found")
+    session.delete(queue_entry)
+    session.commit()
+    return {"message": f"Emergency for patient {queue_entry.patient_name} has been completed and removed from queue"}    
