@@ -10,9 +10,14 @@ active_sessions = {}
 
 @router.post("/signup", response_model=Patient_profiles)
 def signup(patient: Patient_profiles, psw_username: str, session: Session = Depends(get_session)):
+    existing_patient = session.exec(select(Patient_profiles).where(Patient_profiles.username == patient.username)).first()
+    existing_psw = session.exec(select(PSW_profiles).where(PSW_profiles.username == patient.username)).first()
+    if existing_patient or existing_psw:
+        raise HTTPException(status_code=400, detail="Username already taken")
     psw = session.exec(select(PSW_profiles).where(PSW_profiles.username == psw_username)).first()
     if not psw:
         raise HTTPException(status_code=404, detail="PSW not found")
+    patient.id = None
     patient.psw_id = psw.id
     patient.password = hashlib.sha256(patient.password.encode()).hexdigest()
     session.add(patient)

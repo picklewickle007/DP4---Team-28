@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.database import get_session
-from app.models import PSW_profiles
+from app.models import PSW_profiles, Patient_profiles
 import hashlib
 
 router = APIRouter(prefix="/psw-login", tags=["PSW-login"])
@@ -10,6 +10,11 @@ active_psw_sessions = {}
 
 @router.post("/signup", response_model=PSW_profiles)
 def signup(psw: PSW_profiles, session: Session = Depends(get_session)):
+    existing_psw = session.exec(select(PSW_profiles).where(PSW_profiles.username == psw.username)).first()
+    existing_patient = session.exec(select(Patient_profiles).where(Patient_profiles.username == psw.username)).first()
+    if existing_psw or existing_patient:
+        raise HTTPException(status_code=400, detail="Username already taken")
+    psw.id = None
     psw.password = hashlib.sha256(psw.password.encode()).hexdigest()
     session.add(psw)
     session.commit()
