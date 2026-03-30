@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.database import get_session
-from app.models import Schedule, PSWQueue, Patient
+from app.models import Schedule, PSWQueue, Patient_profiles
 from app.routers.schedule import create_scheduled_task
 from app.routers.patients import get_current_patient
 
@@ -17,7 +17,7 @@ def add_to_queue(token: str, session: Session = Depends(get_session)):
     patient_id = get_current_patient(token)
     
     # look up patient profile to get their name
-    query = select(Patient).where(Patient.id == patient_id)
+    query = select(Patient_profiles).where(Patient_profiles.id == patient_id)
     patient_profile = session.exec(query).first()
 
     patient = PSWQueue(patient_id=patient_id, patient_name=patient_profile.name, priority=0)
@@ -30,7 +30,7 @@ def add_to_queue(token: str, session: Session = Depends(get_session)):
 @router.post("/queue/emergency/")
 def emergency_queue(token: str, session: Session = Depends(get_session)):
     patient_id = get_current_patient(token)
-    query = select(Patient).where(Patient.id == patient_id)
+    query = select(Patient_profiles).where(Patient_profiles.id == patient_id)
     patient_profile = session.exec(query).first()
     
     patient = PSWQueue(patient_id=patient_id, patient_name = patient_profile.name, priority=1)

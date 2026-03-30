@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.database import get_session
-from app.models import Patient
+from app.models import Patient_profiles
 import hashlib
 
-router = APIRouter(prefix="/patients", tags=["Patients"])
+router = APIRouter(prefix="/patients-login", tags=["Patients-login"])
 
 active_sessions = {}
 
-@router.post("/signup", response_model=Patient)
-def signup(patient: Patient, session: Session = Depends(get_session)):
+@router.post("/signup", response_model=Patient_profiles)
+def signup(patient: Patient_profiles, session: Session = Depends(get_session)):
     patient.password = hashlib.sha256(patient.password.encode()).hexdigest()
     session.add(patient)
     session.commit()
@@ -19,7 +19,7 @@ def signup(patient: Patient, session: Session = Depends(get_session)):
 @router.post("/login")
 def login(username: str, password: str, session: Session = Depends(get_session)):
     hashed = hashlib.sha256(password.encode()).hexdigest()
-    query = select(Patient).where(Patient.username == username, Patient.password == hashed)
+    query = select(Patient_profiles).where(Patient_profiles.username == username, Patient_profiles.password == hashed)
     patient = session.exec(query).first()
     
     if not patient:
