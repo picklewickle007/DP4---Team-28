@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from 'react-router-dom';
  
-export default function PatientSchedule() {
+export default function PSWSchedule() {
   const [tasks, setTasks] = useState([]);
   const location = useLocation();
  
@@ -24,49 +24,49 @@ export default function PatientSchedule() {
         <nav style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#547aad',
+          backgroundColor: '#7ed957',
           height: '650px',
           width: '200px'
         }}>
  
-          <Link to="/patient" style={{
+          <Link to="/psw" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
             padding: '50px 20px',
-            borderBottom: '5px solid #325585',
+            borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box'
           }}>Home</Link>
-          <Link to="/patient/schedule" style={{
+          <Link to="/psw/schedule" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
             padding: '50px 20px',
-            borderBottom: '5px solid #325585',
+            borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box',
-            backgroundColor: location.pathname === '/patient/schedule' ? '#325585' : 'transparent'
+            backgroundColor: location.pathname === '/psw/schedule' ? '#64a449' : 'transparent'
           }}>Schedule</Link>
-          <Link to="/patient/history" style={{
+          <Link to="/psw/history" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
             padding: '50px 20px',
-            borderBottom: '5px solid #325585',
+            borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box'
           }}>History</Link>
-          <Link to="/patient/map" style={{
+          <Link to="/psw/map" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
             padding: '50px 20px',
-            borderBottom: '5px solid #325585',
+            borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box',
           }}>Map</Link>
-          <Link to="/patient/settings" style={{
+          <Link to="/psw/settings" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
@@ -81,7 +81,7 @@ export default function PatientSchedule() {
       {/*Main Content */}
       <div style={{ flex: 1, padding: '40px' }}>
         <h1 style={{
-          color: '#547aad',
+          color: '#7ed957',
           fontSize: '100px',
           marginBottom: '20px',
           fontFamily: 'Monospace',
@@ -91,3 +91,4 @@ export default function PatientSchedule() {
     </div>
   );
 }
+ 

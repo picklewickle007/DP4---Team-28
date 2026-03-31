@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
  
-export default function PatientHome() {
+export default function PSWHome() {
   const [activeButton, setActiveButton] = useState(null);
   const location = useLocation();
   return (
@@ -17,49 +17,49 @@ export default function PatientHome() {
         <nav style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#547aad',
+          backgroundColor: '#7ed957',
           height: '650px',
           width: '200px'
         }}>
  
-          <Link to="/patient" style={{
+          <Link to="/psw" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
             padding: '50px 20px',
-            borderBottom: '5px solid #325585',
+            borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box',
-            backgroundColor: location.pathname === '/patient' ? '#325585' : 'transparent'
+            backgroundColor: location.pathname === '/psw' ? '#64a449' : 'transparent'
           }}>Home</Link>
-          <Link to="/patient/schedule" style={{
+          <Link to="/psw/schedule" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
             padding: '50px 20px',
-            borderBottom: '5px solid #325585',
+            borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box'
           }}>Schedule</Link>
-          <Link to="/patient/history" style={{
+          <Link to="/psw/history" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
             padding: '50px 20px',
-            borderBottom: '5px solid #325585',
+            borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box'
           }}>History</Link>
-          <Link to="/patient/map" style={{
+          <Link to="/psw/map" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
             padding: '50px 20px',
-            borderBottom: '5px solid #325585',
+            borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box'
           }}>Map</Link>
-          <Link to="/patient/settings" style={{
+          <Link to="/psw/settings" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '36px',
@@ -73,7 +73,7 @@ export default function PatientHome() {
       {/*Main Content */}
       <div style={{ flex: 1, padding: '40px' }}>
         <h1 style={{
-          color: '#547aad',
+          color: '#7ed957',
           fontSize: '100px',
           marginBottom: '20px',
           fontFamily: 'Monospace',
@@ -97,7 +97,7 @@ export default function PatientHome() {
               style={{
                 width: '400px',
                 height: '200px',
-                backgroundColor: activeButton === 'schedule' ? '#325585' : '#547aad',
+                backgroundColor: activeButton === 'schedule' ? '#64a449' : '#7ed957',
                 fontFamily: 'DM Sans',
                 color: 'white',
                 cursor: 'pointer',
@@ -105,22 +105,22 @@ export default function PatientHome() {
                 fontSize: '40px',
                 borderRadius: '30px'
               }}>
-              Add To Schedule
+              Check in
             </button>
             <button onClick={() => setActiveButton(activeButton === 'queue' ? null : 'queue')}
               style={{
                 width: '400px',
                 height: '200px',
-                backgroundColor: activeButton === 'queue' ? '#325585' : '#547aad',
+                backgroundColor: activeButton === 'queue' ? '#64a449' : '#7ed957',
                 fontFamily: 'DM Sans',
                 color: 'white',
                 cursor: 'pointer',
                 border: 'none',
                 borderRadius: '30px',
               }}>
-              <span style={{ fontSize: '40px' }}> Call PSW </span>
+              <span style={{ fontSize: '40px' }}> Pending </span>
               <br />
-              <span style={{ fontSize: '24px' }}> Click to join queue </span>
+              <span style={{ fontSize: '40px' }}> Requests</span>
             </button>
           </div>
           <button onClick={() => setActiveButton(activeButton === 'emergency' ? null : 'emergency')}
@@ -135,7 +135,7 @@ export default function PatientHome() {
               border: 'none',
               fontSize: '24px',
             }}>
-            EMERGENCY
+            ALERTS
           </button>
         </div>
       </div>
