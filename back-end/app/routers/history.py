@@ -1,13 +1,22 @@
 from fastapi import APIRouter, Depends
-from sqlmodel import Session
-from sqlalchemy import text
+from sqlmodel import Session, select
 from app.database import get_session
 from app.models import History
+from app.routers.patients import get_current_patient
+from app.routers.psw import get_current_psw
 
 router = APIRouter(prefix="/history", tags=["History"])
 
-# Use the same format you used on schedule.py here
-
-#get all history!
 @router.get("/", response_model=list[History])
-def get_history(session: Session = Depends(get_session)):
+def get_history(token: str, session: Session = Depends(get_session)):
+    patient_id = get_current_patient(token)
+    query = select(History).where(History.patient_id == patient_id)
+    results = session.exec(query).all()
+    return results
+
+@router.get("/psw", response_model=list[History])
+def get_psw_history(token: str, session: Session = Depends(get_session)):
+    psw_id = get_current_psw(token)
+    query = select(History).where(History.psw_id == psw_id)
+    results = session.exec(query).all()
+    return results
