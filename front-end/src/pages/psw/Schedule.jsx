@@ -120,7 +120,6 @@ export default function PSWSchedule() {
   }
 
   return (
-    // ✅ flex + width: 100% so content fills the page
     <div style={{ display: 'flex', width: '100%' }}>
 
       {/* Side Bar */}
@@ -129,19 +128,55 @@ export default function PSWSchedule() {
           <Link to="/psw" style={{ color: 'white', textDecoration: 'none', fontSize: '36px', padding: '50px 20px', borderBottom: '5px solid #64a449', width: '100%', boxSizing: 'border-box' }}>Home</Link>
           <Link to="/psw/schedule" style={{ color: 'white', textDecoration: 'none', fontSize: '36px', padding: '50px 20px', borderBottom: '5px solid #64a449', width: '100%', boxSizing: 'border-box', backgroundColor: location.pathname === '/psw/schedule' ? '#64a449' : 'transparent' }}>Schedule</Link>
           <Link to="/psw/history" style={{ color: 'white', textDecoration: 'none', fontSize: '36px', padding: '50px 20px', borderBottom: '5px solid #64a449', width: '100%', boxSizing: 'border-box' }}>History</Link>
-          <Link to="/psw/map" style={{ color: 'white', textDecoration: 'none', fontSize: '36px', padding: '50px 20px', borderBottom: '5px solid #64a449', width: '100%', boxSizing: 'border-box' }}>Map</Link>
-          <Link to="/psw/settings" style={{ color: 'white', textDecoration: 'none', fontSize: '36px', padding: '50px 20px', width: '100%', boxSizing: 'border-box' }}>Settings</Link>
+          <Link to="/psw/map" style={{ 
+            color: 'white', 
+            textDecoration: 'none', 
+            fontSize: '36px', 
+            padding: '50px 20px', 
+            borderBottom: '5px solid #64a449', 
+            width: '100%', 
+            boxSizing: 'border-box' 
+            }}
+            >
+              Map
+              </Link>
+          <Link to="/psw/settings" 
+          style={{ 
+            color: 'white', 
+            textDecoration: 'none', 
+            fontSize: '36px', 
+            padding: '50px 20px', 
+            width: '100%', 
+            boxSizing: 'border-box' 
+            }}
+            >
+              Settings
+              </Link>
         </nav>
       </div>
 
       <div style={{ flex: 1, padding: "20px" }}>
-        <h1 style={{ fontFamily: "Monospace", color: "#7ed957" }}>PSW Schedule</h1>
+        <h1 style={{ fontFamily: "Monospace", 
+          color: "#7ed957" 
+          }}
+          >
+            PSW Schedule</h1>
 
-        <div style={{ display: "flex", flexDirection: "row", gap: "8px", width: "100%", marginTop: "20px" }}>
+        <div style={{ display: "flex", 
+          flexDirection: "row", 
+          gap: "8px", 
+          width: "100%", 
+          marginTop: "20px" 
+          }}
+          >
           {dayButtons}
         </div>
 
-        <div style={{ overflowY: "scroll", height: "500px", width: "100%" }}>
+        <div style={{ overflowY: "scroll", 
+          height: "500px", 
+          width: "100%" 
+          }}
+          >
           {timeRows}
         </div>
       </div>
