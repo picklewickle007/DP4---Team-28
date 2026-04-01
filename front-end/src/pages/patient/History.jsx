@@ -1,9 +1,65 @@
+import { useEffect, useState } from "react"; //imports store data tool from react
 import { Link, useLocation } from 'react-router-dom';
- 
-export default function PatientHistory() {
+export default function PatientHistory() { //makes available to other files
+  const [history, setHistory] = useState([]); //creates a state variable called history and a function to update it called setHistory, initialized as an empty array
   const location = useLocation();
-  return (
-    <div style={{ display: 'flex' }}>
+
+  useEffect(function () { //runs when the page loads
+    fetch("http://localhost:8000/history") //sends a GET request to the backend
+      .then(function (res) {
+        return res.json();
+      }) //converts data to javscript
+      .then(function (data) {
+        setHistory(data); //saves data to history
+      });
+  }, []);
+
+  const historyItems = []; //boxes you will see on screen 
+  for (let i = 0; i < history.length; i=i+1) {
+    const item = history[i]; //returns from backend one line at a time
+    historyItems.push(
+      <div 
+        key = {item.id} //tells each box apart from each other
+        //styles the boxes
+        style={{
+          display: "flex",
+          alignItems: "center",
+          backgroundColor: "lightgray",
+          color: "white",
+          borderRadius: "16px",
+          padding: "12px 16px",
+          marginBottom: "12px",
+        }}
+      >
+        <div
+        //this is what displays the timestamp on the right of the screen
+          style={{
+            backgroundColour: "#547aad",
+            color: "white",
+            fontFamily: "Monospace",
+            borderRadius: "12px",
+            padding: "8px 12px",
+            marginRight: "24px",
+            minWidth: "80px"
+          }}
+        >
+          {item.timestamp}
+        </div>
+        <div
+        style={{
+          fontSize: "24px",
+          fontFamily: "Monospace",
+          color: "#547aad"
+        }}
+        >
+          {item.message} {/*//displays message from data base*/}
+        </div>
+      </div>
+    );
+  }
+
+  return ( //helps the boxes actually display on screen and displays additional text
+        <div style={{ display: 'flex' }}>
  
       {/* Side Bar */}
       <div style={{
@@ -68,17 +124,19 @@ export default function PatientHistory() {
  
         </nav>
       </div>
- 
-      {/*Main Content */}
-      <div style={{ flex: 1, padding: '40px' }}>
-        <h1 style={{
-          color: '#547aad',
-          fontSize: '100px',
-          marginBottom: '20px',
-          fontFamily: 'Monospace',
-          paddingRight: '150px'
-        }}>History</h1>
+    <div style={{ padding: "40px" }}>
+      <h1 style={{ fontFamily: "Monospace",
+        textAlign: "center",
+        marginBottom: '20px',
+        fontSize: '100px',
+        marginLeft: '175px',
+        color: "#547aad" }}>
+        History
+      </h1>
+      <div>
+        {historyItems}
       </div>
+    </div>
     </div>
   );
 }

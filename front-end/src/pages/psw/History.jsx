@@ -1,7 +1,63 @@
+import { useEffect, useState } from "react"; //imports store data tool from react
 import { Link, useLocation } from 'react-router-dom';
  
 export default function PSWHistory() {
   const location = useLocation();
+  const [history, setHistory] = useState([]);
+
+  useEffect(function () { //runs when the page loads
+    fetch("http://localhost:8000/history") //sends a GET request to the backend
+      .then(function (res) {
+        return res.json();
+      }) //converts data to javscript
+      .then(function (data) {
+        setHistory(data); //saves data to history
+      });
+  }, []); 
+  const historyItems = []; //boxes you will see on screen 
+  for (let i = 0; i < history.length; i=i+1) {
+    const item = history[i]; //returns from backend one line at a time
+    historyItems.push(
+      <div 
+        key = {item.id} //tells each box apart from each other
+        //styles the boxes
+        style={{
+          display: "flex",
+          alignItems: "center",
+          backgroundColor: "lightgray",
+          color: "white",
+          borderRadius: "16px",
+          padding: "12px 16px",
+          marginBottom: "12px",
+        }}
+        >
+          <div
+            style={{
+              backgroundColour: "#7ed957",
+              color: "white",
+              fontFamily: "Monospace",
+              borderRadius: "12px",
+              padding: "8px 12px",
+              marginRight: "24px",
+              minWidth: "80px"
+            }}
+          >
+            {item.timestamp}
+          </div>
+          <div
+            style={{
+              fontSize: "24px",
+              fontFamily: "Monospace",
+              color: "#7ed957"
+            }}
+          >
+            {item.message}
+          </div>
+        </div>
+      );
+    }
+
+
   return (
     <div style={{ display: 'flex' }}>
  
@@ -70,14 +126,15 @@ export default function PSWHistory() {
       </div>
  
       {/*Main Content */}
-      <div style={{ flex: 1, padding: '40px' }}>
+      <div style={{padding: '40px' }}>
         <h1 style={{
           color: '#7ed957',
           fontSize: '100px',
           marginBottom: '20px',
           fontFamily: 'Monospace',
-          paddingRight: '150px'
-        }}>History</h1>
+          textAlign: 'center',
+            marginLeft: '100px'
+        }}> PSW History</h1>
       </div>
     </div>
   );
