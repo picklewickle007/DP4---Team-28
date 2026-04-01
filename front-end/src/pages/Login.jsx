@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
- 
+
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
     const navigate = useNavigate();
- 
+
     const handleLogin = () => {
         if (!username || !password || !role) {
             alert('Please make sure all fields are filled out.');
@@ -37,7 +37,7 @@ export default function Login() {
             <h1 style={{
                 fontFamily: 'DM Sans'
             }}>Login</h1>
- 
+
              <select
             value = {role}
             onChange = {e => setRole(e.target.value)}
@@ -51,8 +51,8 @@ export default function Login() {
                 <option value = 'patient'>Patient</option>
                 <option value = 'psw'>PSW</option>
             </select>
- 
- 
+
+
             <input
             type = 'text'
             placeholder = 'Username'
@@ -65,7 +65,7 @@ export default function Login() {
                 fontSize: '24px',
                 fontFamily: 'DM Sans'
             }}></input>
- 
+
             <input
             type = 'password'
             placeholder = 'Password'
@@ -78,13 +78,13 @@ export default function Login() {
                 fontSize: '24px',
                 fontFamily: 'DM Sans'
             }}></input>
- 
+
             <button
             onClick = {handleLogin}
             style = {{
                 padding: '10px',
                 fontSize: '24px',
-                backgroundColor: '#547aad',
+                backgroundColor: '#797979',
                 color: 'white',
                 border: 'none',
                 borderRadius: '6px',

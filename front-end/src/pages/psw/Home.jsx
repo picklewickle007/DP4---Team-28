@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
- 
+
 export default function PSWHome() {
   const [activeButton, setActiveButton] = useState(null);
   const location = useLocation();
   return (
     <div style={{ display: 'flex' }}>
- 
+
       {/* Side Bar */}
       <div style={{
         display: 'flex',
@@ -21,7 +21,7 @@ export default function PSWHome() {
           height: '650px',
           width: '200px'
         }}>
- 
+
           <Link to="/psw" style={{
             color: 'white',
             textDecoration: 'none',
@@ -67,7 +67,7 @@ export default function PSWHome() {
             width: '100%',
             boxSizing: 'border-box'
           }}>Settings</Link>
- 
+
         </nav>
       </div>
       {/*Main Content */}

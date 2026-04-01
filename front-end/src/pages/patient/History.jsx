@@ -1,10 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
- 
+
 export default function PatientHistory() {
   const location = useLocation();
   return (
     <div style={{ display: 'flex' }}>
- 
+
       {/* Side Bar */}
       <div style={{
         display: 'flex',
@@ -19,7 +19,7 @@ export default function PatientHistory() {
           height: '650px',
           width: '200px'
         }}>
- 
+
           <Link to="/patient" style={{
             color: 'white',
             textDecoration: 'none',
@@ -65,10 +65,10 @@ export default function PatientHistory() {
             width: '100%',
             boxSizing: 'border-box'
           }}>Settings</Link>
- 
+
         </nav>
       </div>
- 
+
       {/*Main Content */}
       <div style={{ flex: 1, padding: '40px' }}>
         <h1 style={{

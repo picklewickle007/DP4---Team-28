@@ -1,10 +1,27 @@
 import { Link, useLocation } from 'react-router-dom';
- 
+
 export default function PatientSettings() {
   const location = useLocation();
+  const lineStyle = {
+    borderWidth: '3px',
+    borderStyle: 'solid',
+    borderColor: '#547aad',
+    width: '70%',
+    marginLeft: '80px',
+    marginTop: '0'
+  }
+
+  const buttonStyle = {
+    background: 'none',
+    border: 'none',
+    textAlign: 'left',
+    width: '70%',
+    cursor: 'pointer',
+    marginLeft: '0'
+  }
   return (
     <div style={{ display: 'flex' }}>
- 
+
       {/* Side Bar */}
       <div style={{
         display: 'flex',
@@ -19,7 +36,7 @@ export default function PatientSettings() {
           height: '650px',
           width: '200px'
         }}>
- 
+
           <Link to="/patient" style={{
             color: 'white',
             textDecoration: 'none',
@@ -67,7 +84,7 @@ export default function PatientSettings() {
           }}>Settings</Link>
         </nav>
       </div>
- 
+
       {/*Main Content */}
       <div style={{ flex: 1, padding: '40px' }}>
         <h1 style={{
@@ -77,38 +94,16 @@ export default function PatientSettings() {
           fontFamily: 'Monospace',
           paddingRight: '150px'
         }}>Settings</h1>
-        <hr style={{
-          display: 'flex',
-          justifyContent: 'center',
-          borderWidth: '3px',
-          borderStyle: 'solid',
-          borderColor: '#547aad',
-          width: '80%',
-          marginLeft: '50px',
-          marginTop: '130px'
-        }} />
- 
-        <hr style={{
-          display: 'flex',
-          justifyContent: 'center',
-          borderWidth: '3px',
-          borderStyle: 'solid',
-          borderColor: '#547aad',
-          width: '80%',
-          marginLeft: '50px',
-          marginTop: '150px'
-        }} />
- 
-        <hr style={{
-          display: 'flex',
-          justifyContent: 'center',
-          borderWidth: '3px',
-          borderStyle: 'solid',
-          borderColor: '#547aad',
-          width: '80%',
-          marginLeft: '50px',
-          marginTop: '180px'
-        }} />
+        <hr style={{ ...lineStyle, marginTop: '120px' }} />
+        <button style={{ ...buttonStyle, fontSize: '48px', fontFamily: 'DM Sans'}}>
+          <span style={{ fontSize: '48px' }}>Account</span>
+          <div style={{ fontSize: '24px' }}>Password, security, personal details, security</div>
+        </button>
+        <hr style={{ ...lineStyle, marginTop: '20px' }} />
+        <button style={{ ...buttonStyle, fontSize: '48px', fontFamily: 'DM Sans' }}>Notifications</button>
+        <hr style={{ ...lineStyle, marginTop: '40px' }} />
+        <button style={{ ...buttonStyle, fontSize: '48px', fontFamily: 'DM Sans' }}>Log out</button>
+        <hr style={{ ...lineStyle, marginTop: '40px' }} />
       </div>
     </div>
   );

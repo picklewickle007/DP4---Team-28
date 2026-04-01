@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
- 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 export default function PatientHome() {
   const [activeButton, setActiveButton] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
   return (
     <div style={{ display: 'flex' }}>
- 
+
       {/* Side Bar */}
       <div style={{
         display: 'flex',
@@ -21,7 +22,7 @@ export default function PatientHome() {
           height: '650px',
           width: '200px'
         }}>
- 
+
           <Link to="/patient" style={{
             color: 'white',
             textDecoration: 'none',
@@ -67,7 +68,7 @@ export default function PatientHome() {
             width: '100%',
             boxSizing: 'border-box'
           }}>Settings</Link>
- 
+
         </nav>
       </div>
       {/*Main Content */}
@@ -93,7 +94,7 @@ export default function PatientHome() {
             flexDirection: 'column',
             gap: '60px'
           }}>
-            <button onClick={() => setActiveButton(activeButton === 'schedule' ? null : 'schedule')}
+            <button onClick={() => navigate('/patient/schedule', {state: {openForm: true}})}
               style={{
                 width: '400px',
                 height: '200px',
