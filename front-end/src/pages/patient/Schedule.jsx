@@ -56,6 +56,12 @@ export default function PatientSchedule() {
       });
   }, []);
 
+  useEffect(function() {
+    if (location.state && location.state.openForm) {
+        setShowForm(true);
+    }
+}, []);
+
   // Function to handle validation and POST request
   async function handleSubmit() {
     if (!taskName || !taskDate || !taskStartTime || !taskTime || taskName === "Select Task Type") {
