@@ -6,21 +6,17 @@ from app.routers.patients import get_current_patient
 
 router = APIRouter(prefix="/home", tags=["Home"])
 
-@router.get("/")
-def get_home():
-    return {"message": "Welcome to the home page"}
-
 @router.post("/queue/")
 def add_to_queue(token: str, session: Session = Depends(get_session)):
     patient_id = get_current_patient(token)
     
+    # check if patient is already in the queue
     existing = session.exec(select(PSWQueue).where(PSWQueue.patient_id == patient_id)).first()
     if existing:
         raise HTTPException(status_code=400, detail="You are already in the queue")
     
-    query = select(Patient_profiles).where(Patient_profiles.id == patient_id)
-    patient_profile = session.exec(query).first()
-    patient = PSWQueue(patient_id=patient_id, patient_name=patient_profile.name, priority=0)
+    patient_profile = session.exec(select(Patient_profiles).where(Patient_profiles.id == patient_id)).first()
+    patient = PSWQueue(patient_id=patient_id, patient_name=patient_profile.name, priority=0, status = "waiting")
     session.add(patient)
     session.commit()
     session.refresh(patient)
@@ -57,9 +53,8 @@ def emergency_queue(token: str, session: Session = Depends(get_session)):
         session.delete(existing)
         session.commit()
 
-    query = select(Patient_profiles).where(Patient_profiles.id == patient_id)
-    patient_profile = session.exec(query).first()
-    patient = PSWQueue(patient_id=patient_id, patient_name=patient_profile.name, priority=1)
+    patient_profile = session.exec(select(Patient_profiles).where(Patient_profiles.id == patient_id)).first()
+    patient = PSWQueue(patient_id=patient_id, patient_name=patient_profile.name, priority=1, status = "waiting")
     session.add(patient)
     session.commit()
     session.refresh(patient)
@@ -67,17 +62,6 @@ def emergency_queue(token: str, session: Session = Depends(get_session)):
 
 @router.get("/queue/")
 def get_queue(session: Session = Depends(get_session)):
-    query = select(PSWQueue).order_by(PSWQueue.priority.desc(), PSWQueue.id)
-    results = session.exec(query).all()
+    results = session.exec(select(PSWQueue).order_by(PSWQueue.priority.desc(), PSWQueue.id)).all()
     return results
 
-@router.post("/schedule/")
-def home_create_schedule(task: Schedule, token: str, session: Session = Depends(get_session)):
-    patient_id = get_current_patient(token)
-    patient = session.exec(select(Patient_profiles).where(Patient_profiles.id == patient_id)).first()
-    task.patient_id = patient_id
-    task.psw_id = patient.psw_id
-    session.add(task)
-    session.commit()
-    session.refresh(task)
-    return task

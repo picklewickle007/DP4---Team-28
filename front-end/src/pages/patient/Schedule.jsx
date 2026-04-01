@@ -64,8 +64,8 @@ export default function PatientSchedule() {
     const newTask = {
       task: taskName,
       date: taskDate,
-      time: taskTime,
-      startTime: taskStartTime,
+      duration: taskTime,
+      start_time: taskStartTime,
     };
 
     fetch(`http://localhost:8000/schedule/?token=${token}`, {
