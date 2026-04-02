@@ -20,6 +20,7 @@ class Patient_profiles(SQLModel, table=True):
 class Schedule(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     patient_id: int | None = Field(default=None, foreign_key="patient_profiles.id")
+    
     psw_id: int | None = Field(default=None, foreign_key="psw_profiles.id") 
     task: str
     start_time: str

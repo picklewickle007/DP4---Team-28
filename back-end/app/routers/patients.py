@@ -122,3 +122,8 @@ def get_current_patient(token: str) -> int: # accept token as input and return p
     if token not in active_sessions: # check if user is logged in and has active token 
         raise HTTPException(status_code=401, detail="Not logged in")
     return active_sessions[token] # return patient ID
+
+@router.get("/{patient_id}")
+def get_patient_by_id(patient_id: int, session: Session = Depends(get_session)):
+    patient = session.get(Patient_profiles, patient_id)
+    return patient

@@ -3,11 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 
 export default function PSWSchedule() {
   const [tasks, setTasks] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const location = useLocation();
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const weekDays = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 7; i += 1) {
     const tempDate = new Date();
     tempDate.setDate(tempDate.getDate() + i);
     weekDays.push(tempDate);
@@ -16,44 +16,64 @@ export default function PSWSchedule() {
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   function formatHour(hour) {
-    if (hour === 0) return "12am";
-    else if (hour < 12) return hour + "am";
-    else if (hour === 12) return "12pm";
-    else return hour - 12 + "pm";
+    if (hour === 0) {
+      return "12am";
+    }
+    if (hour < 12) {
+      return `${hour}am`;
+    }
+    if (hour === 12) {
+      return "12pm";
+    }
+    return `${hour - 12}pm`;
   }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (!token) return;
 
     fetch(`http://localhost:8000/schedule/psw?token=${token}`)
       .then((res) => res.json())
-      .then((data) => setTasks(data));
+      .then(async (data) => {
+        const normalized = await Promise.all(
+          data.map(async (task) => {
+            const patientRes = await fetch(`http://localhost:8000/patients-login/${task.patient_id}`);
+            const patient = await patientRes.json();
+            return {
+              ...task,
+              startTime: task.start_time,
+              time: task.duration,
+              patient_name: patient.name,
+            };
+          }),
+        );
+        setTasks(normalized);
+      });
   }, []);
 
   const dayButtons = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 7; i += 1) {
     const date = weekDays[i];
 
     function getBgColour() {
-      if (selectedDate.toDateString() === date.toDateString()) return "#7ed957";
-      else return "lightgray";
+      return selectedDate.toDateString() === date.toDateString()
+        ? "#7ed957"
+        : "lightgray";
     }
 
     function getTextColor() {
-      if (selectedDate.toDateString() === date.toDateString()) return "white";
-      else return "black";
+      return selectedDate.toDateString() === date.toDateString()
+        ? "white"
+        : "black";
     }
 
     dayButtons.push(
       <div key={date.toDateString()} style={{ flex: 1 }}>
         <button
-          onClick={function () {
-            setSelectedDate(date);
-          }}
+          onClick={() => setSelectedDate(date)}
           style={{
             backgroundColor: getBgColour(),
             color: getTextColor(),
-            width: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -62,6 +82,8 @@ export default function PSWSchedule() {
             borderRadius: "12px",
             border: "none",
             cursor: "pointer",
+            flex: 1,
+            width: "100%",
             fontFamily: "Monospace",
           }}
         >
@@ -81,74 +103,15 @@ export default function PSWSchedule() {
   }
 
   const filteredTasks = [];
-  for (let i = 0; i < tasks.length; i++) {
-    if (tasks[i].date === selectedDate.toLocaleDateString("en-CA")) {
-      filteredTasks.push(tasks[i]);
+  for (let i = 0; i < tasks.length; i += 1) {
+    const task = tasks[i];
+    if (task.date === selectedDate.toLocaleDateString("en-CA")) {
+      filteredTasks.push(task);
     }
-  }
-
-  const timeRows = [];
-  for (let i = 0; i < 24; i++) {
-    const tasksForThisHour = [];
-    for (let j = 0; j < filteredTasks.length; j++) {
-      const t = filteredTasks[j];
-      let hourPart = t.start_time ? parseInt(t.start_time.split(":")[0]) : -1;
-      if (hourPart === i) tasksForThisHour.push(t);
-    }
-
-    timeRows.push(
-      <div
-        key={i}
-        style={{
-          height: "60px",
-          borderTop: "1px solid lightgray",
-          display: "flex",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            width: "50px",
-            fontSize: "12px",
-            color: "black",
-            fontFamily: "Monospace",
-          }}
-        >
-          {formatHour(i)}
-        </div>
-        <div style={{ flex: 1, position: "relative" }}>
-          {tasksForThisHour.map(function (task) {
-            const minutesPast = parseInt(task.start_time?.split(":")[1] || 0, 10);
-            const duration = parseInt(task.duration, 10) || 30;
-            return (
-              <div
-                key={task.id}
-                style={{
-                  position: "absolute",
-                  top: minutesPast + "px",
-                  left: "5px",
-                  right: "10px",
-                  height: duration + "px",
-                  backgroundColor: "#7ed957",
-                  color: "white",
-                  borderRadius: "8px",
-                  padding: "4px",
-                  fontSize: "12px",
-                  zIndex: 10,
-                  fontFamily: "Monospace",
-                }}
-              >
-                {task.task}
-              </div>
-            );
-          })}
-        </div>
-      </div>,
-    );
   }
 
   return (
-    <div style={{ display: "flex", width: "100%" }}>
+    <div style={{ display: "flex" }}>
       {/* Side Bar */}
       <div
         style={{
@@ -243,10 +206,26 @@ export default function PSWSchedule() {
         </nav>
       </div>
 
-      <div style={{ flex: 1, padding: "20px" }}>
-        <h1 style={{ fontFamily: "Monospace", color: "#7ed957" }}>
-          PSW Schedule
-        </h1>
+      {/* Main Content */}
+      <div
+        style={{
+          flex: 1,
+          padding: "20px",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+          }}
+        >
+          <h1 style={{ fontFamily: "Monospace", color: "#7ed957" }}>
+            PSW Schedule
+          </h1>
+        </div>
 
         <div
           style={{
@@ -260,8 +239,68 @@ export default function PSWSchedule() {
           {dayButtons}
         </div>
 
-        <div style={{ overflowY: "scroll", height: "500px", width: "100%" }}>
-          {timeRows}
+        <div style={{ overflowY: "scroll", height: "500px" }}>
+          <div style={{ position: "relative", height: `${24 * 60}px` }}>
+            {/* Hour lines */}
+            {Array.from({ length: 24 }, (_, i) => (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  top: `${i * 60}px`,
+                  left: 0,
+                  right: 0,
+                  borderTop: "1px solid lightgray",
+                  display: "flex",
+                }}
+              >
+                <div
+                  style={{
+                    width: "50px",
+                    fontSize: "12px",
+                    fontFamily: "Monospace",
+                  }}
+                >
+                  {formatHour(i)}
+                </div>
+              </div>
+            ))}
+
+            {/* Tasks */}
+            {filteredTasks.map((task) => {
+              const [hourStr, minStr] = (task.startTime || "0:0").split(":");
+              const startMinutes =
+                parseInt(hourStr, 10) * 60 + parseInt(minStr, 10);
+              const duration = parseInt(task.time, 10) || 30;
+
+              return (
+                <div
+                  key={task.id}
+                  style={{
+                    position: "absolute",
+                    top: `${startMinutes}px`,
+                    left: "55px",
+                    right: "10px",
+                    height: `${duration}px`,
+                    backgroundColor: "#7ed957",
+                    color: "white",
+                    borderRadius: "8px",
+                    padding: "4px",
+                    fontSize: "12px",
+                    zIndex: 10,
+                    fontFamily: "Monospace",
+                    border: "2px solid lightgray",
+                    boxSizing: "border-box",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div style={{ fontWeight: "bold" }}>{task.task} - {task.patient_name}</div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

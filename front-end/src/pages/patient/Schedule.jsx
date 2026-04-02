@@ -45,11 +45,24 @@ export default function PatientSchedule() {
 
     fetch(`http://localhost:8000/schedule/?token=${token}`)
       .then((res) => res.json())
-      .then((data) => setTasks(data));
+      .then((data) => {
+        const normalized = data.map((task) => ({
+          ...task,
+          startTime: task.start_time,
+          time: task.duration,
+        }));
+        setTasks(normalized);
+      });
   }, []);
 
   function handleSubmit() {
-    if (!taskName || !taskDate || !taskStartTime || !taskTime || taskName === "Select Task Type") {
+    if (
+      !taskName ||
+      !taskDate ||
+      !taskStartTime ||
+      !taskTime ||
+      taskName === "Select Task Type"
+    ) {
       setError("Please fill in all fields before submitting.");
       return;
     }
@@ -75,7 +88,10 @@ export default function PatientSchedule() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setTasks([...tasks, { ...data, startTime: taskStartTime, time: taskTime }]);
+        setTasks([
+          ...tasks,
+          { ...data, startTime: taskStartTime, time: taskTime },
+        ]);
         setShowForm(false);
         setError("");
         setTaskName("");
@@ -93,11 +109,15 @@ export default function PatientSchedule() {
     const date = weekDays[i];
 
     function getBgColour() {
-      return selectedDate.toDateString() === date.toDateString() ? "#547aad" : "lightgray";
+      return selectedDate.toDateString() === date.toDateString()
+        ? "#547aad"
+        : "lightgray";
     }
 
     function getTextColor() {
-      return selectedDate.toDateString() === date.toDateString() ? "white" : "black";
+      return selectedDate.toDateString() === date.toDateString()
+        ? "white"
+        : "black";
     }
 
     dayButtons.push(
@@ -151,9 +171,12 @@ export default function PatientSchedule() {
   const timeRows = [];
   for (let i = 0; i < 24; i += 1) {
     const tasksForThisHour = [];
-      for (let j = 0; j < filteredTasks.length; j += 1) {  
+    for (let j = 0; j < filteredTasks.length; j += 1) {
       const task = filteredTasks[j];
-      const hourPart = parseInt(task.startTime ? task.startTime.split(":")[0] : -1, 10);
+      const hourPart = parseInt(
+        task.startTime ? task.startTime.split(":")[0] : -1,
+        10,
+      );
       if (hourPart === i) {
         tasksForThisHour.push(task);
       }
@@ -181,7 +204,10 @@ export default function PatientSchedule() {
         </div>
         <div style={{ flex: 1, position: "relative" }}>
           {tasksForThisHour.map((task) => {
-            const minutesPast = parseInt(task.startTime?.split(":")[1] || 0, 10);
+            const minutesPast = parseInt(
+              task.startTime?.split(":")[1] || 0,
+              10,
+            );
             const duration = parseInt(task.time, 10) || 30;
 
             return (
@@ -200,6 +226,7 @@ export default function PatientSchedule() {
                   fontSize: "12px",
                   zIndex: 10,
                   fontFamily: "Monospace",
+                  border: "2px solid black",
                 }}
               >
                 {task.task}
@@ -225,7 +252,9 @@ export default function PatientSchedule() {
   if (showOther1) {
     customTimeInput = (
       <div style={{ marginBottom: "20px" }}>
-        <p style={{ fontFamily: "Monospace" }}>Insert Custom Task Time (in minutes):</p>
+        <p style={{ fontFamily: "Monospace" }}>
+          Insert Custom Task Time (in minutes):
+        </p>
         <input
           type="number"
           onChange={(event) => setTaskTime(event.target.value)}
@@ -274,9 +303,21 @@ export default function PatientSchedule() {
           margin: "0 auto",
         }}
       >
-        {error && <p style={{ color: "red", fontWeight: "bold", fontFamily: "Monospace" }}>{error}</p>}
+        {error && (
+          <p
+            style={{
+              color: "red",
+              fontWeight: "bold",
+              fontFamily: "Monospace",
+            }}
+          >
+            {error}
+          </p>
+        )}
 
-        <h1 style={{ marginBottom: "30px", fontFamily: "Monospace" }}>Add New Task</h1>
+        <h1 style={{ marginBottom: "30px", fontFamily: "Monospace" }}>
+          Add New Task
+        </h1>
 
         <div style={{ marginBottom: "20px" }}>
           <p style={{ fontFamily: "Monospace" }}>Required Task</p>
@@ -458,7 +499,10 @@ export default function PatientSchedule() {
               borderBottom: "5px solid #325585",
               width: "100%",
               boxSizing: "border-box",
-              backgroundColor: location.pathname === "/patient/schedule" ? "#325585" : "transparent",
+              backgroundColor:
+                location.pathname === "/patient/schedule"
+                  ? "#325585"
+                  : "transparent",
             }}
           >
             Schedule
@@ -548,11 +592,14 @@ export default function PatientSchedule() {
             >
               +
             </button>
-            <p style={{ fontFamily: "Monospace", color: "#547aad" }}>Add to Schedule</p>
+            <p style={{ fontFamily: "Monospace", color: "#547aad" }}>
+              Add to Schedule
+            </p>
           </div>
-          <h1 style={{ fontFamily: "Monospace", color: "#547aad" }}>Patient Schedule</h1>
+          <h1 style={{ fontFamily: "Monospace", color: "#547aad" }}>
+            Patient Schedule
+          </h1>
         </div>
-
         <div
           style={{
             display: "flex",
@@ -564,18 +611,68 @@ export default function PatientSchedule() {
         >
           {dayButtons}
         </div>
+        <div style={{ overflowY: "scroll", height: "500px" }}>
+          <div style={{ position: "relative", height: `${24 * 60}px` }}>
+            {/* Hour lines */}
+            {Array.from({ length: 24 }, (_, i) => (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  top: `${i * 60}px`,
+                  left: 0,
+                  right: 0,
+                  borderTop: "1px solid lightgray",
+                  display: "flex",
+                }}
+              >
+                <div
+                  style={{
+                    width: "50px",
+                    fontSize: "12px",
+                    fontFamily: "Monospace",
+                  }}
+                >
+                  {formatHour(i)}
+                </div>
+              </div>
+            ))}
 
-        <div
-          style={{
-            overflowY: "scroll",
-            height: "500px",
-          }}
-        >
-          {timeRows}
-        </div>
+            {/* Tasks */}
+            {filteredTasks.map((task) => {
+              const [hourStr, minStr] = (task.startTime || "0:0").split(":");
+              const startMinutes =
+                parseInt(hourStr, 10) * 60 + parseInt(minStr, 10);
+              const duration = parseInt(task.time, 10) || 30;
 
-        <div>
-          <ul>{taskItems}</ul>
+              return (
+                <div
+                  key={task.id}
+                  style={{
+                    position: "absolute",
+                    top: `${startMinutes}px`,
+                    left: "55px",
+                    right: "10px",
+                    height: `${duration}px`,
+                    backgroundColor: "#547aad",
+                    color: "white",
+                    borderRadius: "8px",
+                    padding: "4px",
+                    fontSize: "12px",
+                    zIndex: 10,
+                    fontFamily: "Monospace",
+                    border: "0.5px solid lightgray",
+                    boxSizing: "border-box",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {task.task}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
