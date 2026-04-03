@@ -203,7 +203,7 @@ export default function PatientSettings() {
     setIsSavingProfile(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/patients-login/profile?token=${token}`, {
+      const response = await fetch(`http://localhost:8000/patients-login/profile-update?token=${token}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

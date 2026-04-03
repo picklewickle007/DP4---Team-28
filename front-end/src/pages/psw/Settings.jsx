@@ -199,7 +199,7 @@ export default function PSWSettings() {
     setIsSavingProfile(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/psw-login/profile?token=${token}`, {
+      const response = await fetch(`http://localhost:8000/psw-login/profile-update?token=${token}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -69,7 +69,7 @@ def get_profile(token: str, session: Session = Depends(get_session)):
     }
 
 
-@router.put("/profile")
+@router.put("/profile-update")
 def update_profile(update: PatientProfileUpdate, token: str, session: Session = Depends(get_session)):
     patient_id = get_current_patient(token)
     patient = session.exec(select(Patient_profiles).where(Patient_profiles.id == patient_id)).first()

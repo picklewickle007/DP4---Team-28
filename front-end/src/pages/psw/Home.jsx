@@ -259,11 +259,11 @@ export default function PSWHome() {
       <div style={{ flex: 1, padding: '40px' }}>
         <h1 style={{
           color: '#7ed957',
-          fontSize: '100px',
+          fontSize: '50px',
           marginBottom: '20px',
           fontFamily: 'Monospace',
           paddingRight: '220px'
-        }}>Home</h1>
+        }}>Welcome, {localStorage.getItem('name')}</h1>
         <div style={{
           display: 'flex',
           flexDirection: 'row',

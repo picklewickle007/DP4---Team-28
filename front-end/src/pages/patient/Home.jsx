@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function PatientHome() {
   const [activeButton, setActiveButton] = useState(null);
@@ -8,9 +8,10 @@ export default function PatientHome() {
   const [isEmergencyActive, setIsEmergencyActive] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const name = localStorage.getItem("name");
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (!token) {
       setIsQueueLoading(false);
@@ -22,7 +23,7 @@ export default function PatientHome() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.detail || 'Could not load queue status.');
+          throw new Error(data.detail || "Could not load queue status.");
         }
 
         const inQueue = Boolean(data.in_queue);
@@ -30,10 +31,10 @@ export default function PatientHome() {
 
         setIsInQueue(inQueue && !isEmergency);
         setIsEmergencyActive(isEmergency);
-        setActiveButton(isEmergency ? 'emergency' : inQueue ? 'queue' : null);
+        setActiveButton(isEmergency ? "emergency" : inQueue ? "queue" : null);
       })
       .catch((error) => {
-        alert(error.message || 'Could not connect to the server.');
+        alert(error.message || "Could not connect to the server.");
       })
       .finally(() => {
         setIsQueueLoading(false);
@@ -41,48 +42,53 @@ export default function PatientHome() {
   }, []);
 
   const handleQueueToggle = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (!token) {
-      alert('Please log in first.');
+      alert("Please log in first.");
       return;
     }
 
     setIsQueueLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/home/queue/?token=${token}`, {
-        method: isInQueue ? 'DELETE' : 'POST',
-      });
+      const response = await fetch(
+        `http://localhost:8000/home/queue/?token=${token}`,
+        {
+          method: isInQueue ? "DELETE" : "POST",
+        },
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || 'Queue request failed.');
+        throw new Error(data.detail || "Queue request failed.");
       }
 
       const nextInQueue = !isInQueue;
       setIsInQueue(nextInQueue);
       setIsEmergencyActive(false);
-      setActiveButton(nextInQueue ? 'queue' : null);
+      setActiveButton(nextInQueue ? "queue" : null);
 
       if (nextInQueue) {
-        alert("You're in the queue and the next available PSW is on their way.");
+        alert(
+          "You're in the queue and the next available PSW is on their way.",
+        );
       } else {
-        alert('You have left the queue.');
+        alert("You have left the queue.");
       }
     } catch (error) {
-      alert(error.message || 'Could not connect to the server.');
+      alert(error.message || "Could not connect to the server.");
     } finally {
       setIsQueueLoading(false);
     }
   };
 
   const handleEmergencyToggle = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (!token) {
-      alert('Please log in first.');
+      alert("Please log in first.");
       return;
     }
 
@@ -94,63 +100,66 @@ export default function PatientHome() {
         : `http://localhost:8000/home/queue/emergency/?token=${token}`;
 
       const response = await fetch(endpoint, {
-        method: isEmergencyActive ? 'DELETE' : 'POST',
+        method: isEmergencyActive ? "DELETE" : "POST",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || 'Emergency request failed.');
+        throw new Error(data.detail || "Emergency request failed.");
       }
 
       if (isEmergencyActive) {
         setIsEmergencyActive(false);
         setIsInQueue(false);
         setActiveButton(null);
-        alert('Emergency request cancelled. You have been removed from the queue.');
+        alert(
+          "Emergency request cancelled. You have been removed from the queue.",
+        );
       } else {
         setIsEmergencyActive(true);
         setIsInQueue(false);
-        setActiveButton('emergency');
-        alert('Emergency alert sent. A PSW will arrive as soon as possible.');
+        setActiveButton("emergency");
+        alert("Emergency alert sent. A PSW will arrive as soon as possible.");
       }
     } catch (error) {
-      alert(error.message || 'Could not connect to the server.');
+      alert(error.message || "Could not connect to the server.");
     } finally {
       setIsQueueLoading(false);
     }
   };
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: "flex" }}>
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          minHeight: '100vh',
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          minHeight: "100vh",
         }}
       >
         <nav
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            backgroundColor: '#547aad',
-            height: '650px',
-            width: '200px',
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "#547aad",
+            height: "650px",
+            width: "200px",
           }}
         >
           <Link
             to="/patient"
             style={{
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '36px',
-              padding: '50px 20px',
-              borderBottom: '5px solid #325585',
-              width: '100%',
-              boxSizing: 'border-box',
-              backgroundColor: location.pathname === '/patient' ? '#325585' : 'transparent',
+              color: "white",
+              textDecoration: "none",
+              fontSize: "36px",
+              padding: "50px 20px",
+              borderBottom: "5px solid #325585",
+              width: "100%",
+              boxSizing: "border-box",
+              backgroundColor:
+                location.pathname === "/patient" ? "#325585" : "transparent",
             }}
           >
             Home
@@ -158,13 +167,13 @@ export default function PatientHome() {
           <Link
             to="/patient/schedule"
             style={{
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '36px',
-              padding: '50px 20px',
-              borderBottom: '5px solid #325585',
-              width: '100%',
-              boxSizing: 'border-box',
+              color: "white",
+              textDecoration: "none",
+              fontSize: "36px",
+              padding: "50px 20px",
+              borderBottom: "5px solid #325585",
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
             Schedule
@@ -172,13 +181,13 @@ export default function PatientHome() {
           <Link
             to="/patient/history"
             style={{
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '36px',
-              padding: '50px 20px',
-              borderBottom: '5px solid #325585',
-              width: '100%',
-              boxSizing: 'border-box',
+              color: "white",
+              textDecoration: "none",
+              fontSize: "36px",
+              padding: "50px 20px",
+              borderBottom: "5px solid #325585",
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
             History
@@ -186,13 +195,13 @@ export default function PatientHome() {
           <Link
             to="/patient/map"
             style={{
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '36px',
-              padding: '50px 20px',
-              borderBottom: '5px solid #325585',
-              width: '100%',
-              boxSizing: 'border-box',
+              color: "white",
+              textDecoration: "none",
+              fontSize: "36px",
+              padding: "50px 20px",
+              borderBottom: "5px solid #325585",
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
             Map
@@ -200,12 +209,12 @@ export default function PatientHome() {
           <Link
             to="/patient/settings"
             style={{
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '36px',
-              padding: '50px 20px',
-              width: '100%',
-              boxSizing: 'border-box',
+              color: "white",
+              textDecoration: "none",
+              fontSize: "36px",
+              padding: "50px 20px",
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
             Settings
@@ -213,37 +222,50 @@ export default function PatientHome() {
         </nav>
       </div>
 
-      <div style={{ flex: 1, padding: '40px' }}>
+      <div style={{ flex: 1, padding: "40px" }}>
+        <h1
+          style={{
+            color: "#547aad",
+            fontSize: "50px",
+            marginBottom: "20px",
+            fontFamily: "Monospace",
+          }}
+        >
+          Welcome, {name}!
+        </h1>
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            paddingLeft: '50px',
-            alignItems: 'center',
-            paddingTop: '80px',
-            gap: '100px',
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingLeft: "50px",
+            alignItems: "center",
+            paddingTop: "80px",
+            gap: "100px",
           }}
         >
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '60px',
+              display: "flex",
+              flexDirection: "column",
+              gap: "60px",
             }}
           >
             <button
-              onClick={() => navigate('/patient/schedule', { state: { openForm: true } })}
+              onClick={() =>
+                navigate("/patient/schedule", { state: { openForm: true } })
+              }
               style={{
-                width: '400px',
-                height: '200px',
-                backgroundColor: activeButton === 'schedule' ? '#325585' : '#547aad',
-                fontFamily: 'DM Sans',
-                color: 'white',
-                cursor: 'pointer',
-                border: 'none',
-                fontSize: '40px',
-                borderRadius: '30px',
+                width: "400px",
+                height: "200px",
+                backgroundColor:
+                  activeButton === "schedule" ? "#325585" : "#547aad",
+                fontFamily: "DM Sans",
+                color: "white",
+                cursor: "pointer",
+                border: "none",
+                fontSize: "40px",
+                borderRadius: "30px",
               }}
             >
               Add To Schedule
@@ -252,29 +274,36 @@ export default function PatientHome() {
               onClick={handleQueueToggle}
               disabled={isQueueLoading || isEmergencyActive}
               style={{
-                width: '400px',
-                height: '200px',
-                backgroundColor: isInQueue ? '#325585' : '#547aad',
-                fontFamily: 'DM Sans',
-                color: 'white',
-                cursor: isQueueLoading || isEmergencyActive ? 'not-allowed' : 'pointer',
-                border: 'none',
-                borderRadius: '30px',
+                width: "400px",
+                height: "200px",
+                backgroundColor: isInQueue ? "#325585" : "#547aad",
+                fontFamily: "DM Sans",
+                color: "white",
+                cursor:
+                  isQueueLoading || isEmergencyActive
+                    ? "not-allowed"
+                    : "pointer",
+                border: "none",
+                borderRadius: "30px",
                 opacity: isQueueLoading || isEmergencyActive ? 0.8 : 1,
               }}
             >
-              <span style={{ fontSize: '40px' }}>
-                {isQueueLoading ? 'Loading...' : isInQueue ? 'Leave Queue' : 'Call PSW'}
+              <span style={{ fontSize: "40px" }}>
+                {isQueueLoading
+                  ? "Loading..."
+                  : isInQueue
+                    ? "Leave Queue"
+                    : "Call PSW"}
               </span>
               <br />
-              <span style={{ fontSize: '24px' }}>
+              <span style={{ fontSize: "24px" }}>
                 {isQueueLoading
-                  ? 'Checking queue status'
+                  ? "Checking queue status"
                   : isEmergencyActive
-                    ? 'Unavailable during emergency'
+                    ? "Unavailable during emergency"
                     : isInQueue
-                      ? 'Click to leave the queue'
-                      : 'Click to join queue'}
+                      ? "Click to leave the queue"
+                      : "Click to join queue"}
               </span>
             </button>
           </div>
@@ -282,19 +311,19 @@ export default function PatientHome() {
             onClick={handleEmergencyToggle}
             disabled={isQueueLoading}
             style={{
-              width: '200px',
-              height: '200px',
-              borderRadius: '50%',
-              backgroundColor: isEmergencyActive ? '#8f1d1d' : '#b82525',
-              fontFamily: 'DM Sans',
-              color: 'white',
-              cursor: isQueueLoading ? 'wait' : 'pointer',
-              border: 'none',
-              fontSize: '24px',
+              width: "200px",
+              height: "200px",
+              borderRadius: "50%",
+              backgroundColor: isEmergencyActive ? "#8f1d1d" : "#b82525",
+              fontFamily: "DM Sans",
+              color: "white",
+              cursor: isQueueLoading ? "wait" : "pointer",
+              border: "none",
+              fontSize: "24px",
               opacity: isQueueLoading ? 0.8 : 1,
             }}
           >
-            {isEmergencyActive ? 'CANCEL' : 'EMERGENCY'}
+            {isEmergencyActive ? "CANCEL" : "EMERGENCY"}
           </button>
         </div>
       </div>
