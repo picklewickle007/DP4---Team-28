@@ -1,3 +1,6 @@
+'''end points to let patients sign up, log in, view and update their personal information, 
+and keeps them securely logged in using a hash map encrypted token so the system knows who they are.'''
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, SQLModel, select
 from app.database import get_session

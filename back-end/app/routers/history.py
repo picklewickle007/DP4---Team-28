@@ -1,3 +1,5 @@
+'''Retrieves and returns visit history records for a patient or PSW based on their authenticated token.'''
+
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from app.database import get_session

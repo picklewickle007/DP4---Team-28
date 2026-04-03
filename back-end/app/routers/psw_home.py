@@ -1,3 +1,7 @@
+'''This code lets PSWs view and manage their patient queue by seeing regular and emergency requests, 
+checking whos next, and removing patients from the queue once theyve been helped.'''
+
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.database import get_session

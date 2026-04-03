@@ -1,3 +1,6 @@
+'''Manages the patient support queue by letting patients join, check, leave, or request emergency priority, while 
+also allowing the full queue to be viewed in priority order.'''
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.database import get_session

@@ -1,3 +1,7 @@
+'''Handles user login by verifying hashed credentials against patient or PSW records, 
+then generates and stores a session token with the users role.  This information is used to direct 
+patients to the patient interface and PSWs to the PSW interface.'''
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.database import get_session
