@@ -1,13 +1,16 @@
+//inititalizes front end for psw schedule front-end
+//importing tools from react
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function PSWSchedule() {
+  //constant for back-end tasks, day being viewed, which task is open 
   const [tasks, setTasks] = useState([]);
   const location = useLocation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTask, setSelectedTask] = useState(null);
-// tracks which task is currently clicked, null means none are open
 
+  //initailizes days of the week
   const weekDays = [];
   for (let i = 0; i < 7; i = i + 1) {
     const tempDate = new Date();
@@ -17,6 +20,7 @@ export default function PSWSchedule() {
 
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  //converts 24hr times to 12 hour times
   function formatHour(hour) {
     if (hour === 0) {
       return "12am";
@@ -30,18 +34,21 @@ export default function PSWSchedule() {
     return hour - 12 + "pm";
   }
 
+  //gets tasks from the psw backend
   useEffect(function () {
     const token = localStorage.getItem("token");
     if (!token) {
       return;
     }
-
     fetch("http://localhost:8000/schedule/psw?token=" + token)
       .then(function (res) {
         return res.json();
       })
+
       .then(async function (data) {
         const normalized = [];
+      
+        //filters tasks thar match the selected date
         for (let i = 0; i < data.length; i = i + 1) {
           const task = data[i];
           const patientRes = await fetch(
@@ -60,10 +67,12 @@ export default function PSWSchedule() {
       });
   }, []);
 
+  //initalizes day buttons
   const dayButtons = [];
   for (let i = 0; i < 7; i = i + 1) {
     const date = weekDays[i];
 
+    //initalizes background colour of selected day
     function getBgColour() {
       if (selectedDate.toDateString() === date.toDateString()) {
         return "#7ed957";
@@ -72,6 +81,7 @@ export default function PSWSchedule() {
       }
     }
 
+    //initalizes tesxt colour of selected day
     function getTextColor() {
       if (selectedDate.toDateString() === date.toDateString()) {
         return "white";
@@ -128,6 +138,8 @@ export default function PSWSchedule() {
     );
   }
 
+  // filters to selected date
+  // "en-CA" formats the date as YYYY-MM-DD to match how the backend 
   const filteredTasks = [];
   for (let i = 0; i < tasks.length; i = i + 1) {
     const task = tasks[i];
@@ -136,6 +148,7 @@ export default function PSWSchedule() {
     }
   }
 
+  //puts task on the grid
   const renderedTasks = [];
   for (let i = 0; i < filteredTasks.length; i = i + 1) {
     const task = filteredTasks[i];
@@ -144,9 +157,9 @@ export default function PSWSchedule() {
       parseInt(startTimeParts[0], 10) * 60 + parseInt(startTimeParts[1], 10);
     const duration = parseInt(task.time, 10) || 30;
 
-  renderedTasks.push(
+  // converts start time like "9:30" into total minutes from midnight
+    renderedTasks.push(
     <div key={task.id}>
-    {/* Task block - click to open/close dropdown */}
       <div
        onClick={function () {
           if (selectedTask && selectedTask.id === task.id) {
@@ -240,6 +253,7 @@ export default function PSWSchedule() {
 );
   }
 
+    // builds 24 horizontal hour lines
   const hourLines = [];
   for (let i = 0; i < 24; i = i + 1) {
     hourLines.push(
@@ -273,6 +287,7 @@ export default function PSWSchedule() {
         display: "flex",
       }}
     >
+      {/* side bar */}
       <div
         style={{
           display: "flex",
@@ -366,8 +381,9 @@ export default function PSWSchedule() {
         </nav>
       </div>
 
+      {/* main content */}
       <div
-        style={{
+       style={{
           flex: 1,
           padding: "20px",
           width: "100%",

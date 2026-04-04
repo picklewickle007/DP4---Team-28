@@ -1,29 +1,36 @@
-import { useEffect, useState } from "react"; //imports store data tool from react
+//sets up patient history page's front-end 
+//import statments imports data storing tools from react
+import { useEffect, useState } from "react"; 
 import { Link, useLocation } from 'react-router-dom';
-export default function PatientHistory() { //makes available to other files
-  const [history, setHistory] = useState([]); //creates a state variable called history and a function to update it called setHistory, initialized as an empty array
+
+//exports patient history component so other files can use it
+export default function PatientHistory() {
+  
+  //constants to set history variable and structure the url path
+  const [history, setHistory] = useState([]);
   const location = useLocation();
 
-  useEffect(function () { //runs when the page loads
+  //block that runs when the page loads
+  useEffect(function () { 
     const token = localStorage.getItem("token");
     if (!token) {
       return;
     }
-    fetch("http://localhost:8000/history/patient?token=" + token) //sends a GET request to the backend with token
+    fetch("http://localhost:8000/history/patient?token=" + token)
       .then(function (res) {
         return res.json();
-      }) //converts data to javascript
+      })
       .then(function (data) {
-        setHistory(data); //saves data to history
+        setHistory(data);
       });
   }, []);
 
-  const historyItems = []; //boxes you will see on screen
+  const historyItems = [];
   for (let i = 0; i < history.length; i=i+1) {
-    const item = history[i]; //returns from backend one line at a time
+    const item = history[i];
     historyItems.push(
       <div
-        key={item.id} //tells each box apart from each other
+        key={item.id}
         style={{
           display: "flex",
           alignItems: "center",
@@ -34,8 +41,8 @@ export default function PatientHistory() { //makes available to other files
           marginBottom: "12px",
         }}
       >
+        {/* this is what displays the date on the right of the screen */}
         <div
-          //this is what displays the date on the right of the screen
           style={{
             backgroundColor: "#547aad",
             color: "white",
@@ -55,30 +62,38 @@ export default function PatientHistory() { //makes available to other files
             color: "#547aad",
           }}
         >
-          {item.task} - {item.status} {/*displays task and status from database*/}
+          {/* displays task and status from database */}
+          {item.task} - {item.status} 
         </div>
       </div>
     );
   }
 
-  return ( //helps the boxes actually display on screen and displays additional text
+  let historyContent = <p>No history found.</p>;
+    if (historyItems.length > 0) {
+      historyContent = historyItems;
+    }
+
+  return ( 
     <div style={{ display: 'flex' }}>
 
       {/* Side Bar */}
+      {/* make this element at least as tall as the full window */}
       <div style={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         minHeight: '100vh',
-      }}>
+      }}
+      >
         <nav style={{
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#547aad',
           height: '650px',
           width: '200px'
-        }}>
-
+        }}
+        >
           <Link to="/patient" style={{
             color: 'white',
             textDecoration: 'none',
@@ -87,7 +102,9 @@ export default function PatientHistory() { //makes available to other files
             borderBottom: '5px solid #325585',
             width: '100%',
             boxSizing: 'border-box'
-          }}>Home</Link>
+          }}>
+            Home
+          </Link>
           <Link to="/patient/schedule" style={{
             color: 'white',
             textDecoration: 'none',
@@ -96,7 +113,9 @@ export default function PatientHistory() { //makes available to other files
             borderBottom: '5px solid #325585',
             width: '100%',
             boxSizing: 'border-box'
-          }}>Schedule</Link>
+          }}>
+            Schedule
+          </Link>
           <Link to="/patient/history" style={{
             color: 'white',
             textDecoration: 'none',
@@ -106,7 +125,9 @@ export default function PatientHistory() { //makes available to other files
             width: '100%',
             boxSizing: 'border-box',
             backgroundColor: location.pathname === '/patient/history' ? '#325585' : 'transparent'
-          }}>History</Link>
+          }}>
+            History
+          </Link>
           <Link to="/patient/map" style={{
             color: 'white',
             textDecoration: 'none',
@@ -115,7 +136,9 @@ export default function PatientHistory() { //makes available to other files
             borderBottom: '5px solid #325585',
             width: '100%',
             boxSizing: 'border-box'
-          }}>Map</Link>
+          }}>
+            Map
+          </Link>
           <Link to="/patient/settings" style={{
             color: 'white',
             textDecoration: 'none',
@@ -123,13 +146,28 @@ export default function PatientHistory() { //makes available to other files
             padding: '50px 20px',
             width: '100%',
             boxSizing: 'border-box'
-          }}>Settings</Link>
-
+          }}>
+            Settings
+          </Link>
         </nav>
       </div>
-      <div style={{ flex: 1, padding: '40px' }}>
-        <h1>Patient History</h1>
-        {historyItems.length > 0 ? historyItems : <p>No history found.</p>}
+      
+      {/* main page */}
+      <div style={{ 
+        flex: 1, 
+        padding: '40px', 
+        }}
+        >
+        <h1 
+        style={{ 
+          color: "#547aad", 
+          fontFamily: "Monospace" 
+          }}
+          >
+            Patient History
+            </h1>
+        {/* returns no history found if no items in the list */}
+        {historyContent}
       </div>
       </div>
   );

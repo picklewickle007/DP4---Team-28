@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react"; //imports store data tool from react
+//sets up psw history page's front-end 
+//import statments imports data storing tools from react
+import { useEffect, useState } from "react"; 
 import { Link, useLocation } from "react-router-dom";
 
+//exports patient history component so other files can use it
 export default function PSWHistory() {
-  const location = useLocation();
-  const [history, setHistory] = useState([]);
 
+  //constants to set history variable and sture the url path
+  const location = useLocation();
+  const [history, setHistory] = useState([]); //creates a state variable called history and a function to update it called setHistory, initialized as an empty array
+
+  //runs when page loads
   useEffect(function () {
-    //runs when the page loads
     const token = localStorage.getItem("token");
     if (!token) {
       return;
@@ -37,6 +42,7 @@ export default function PSWHistory() {
         }}
       >
         <div
+        //this is what displays the date on the right of the screen
           style={{
             backgroundColor: "#7ed957",
             color: "white",
@@ -63,6 +69,11 @@ export default function PSWHistory() {
     );
   }
 
+  let historyContent = <p>No history found.</p>;
+    if (historyItems.length > 0) {
+      historyContent = historyItems;
+    }
+  //helps the boxes actually display on screen and displays additional text
   return (
     <div
       style={{
@@ -75,7 +86,7 @@ export default function PSWHistory() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          minHeight: "100vh",
+          minHeight: "100vh", minHeight: "100vh"  /* make this element at least as tall as the full window */
         }}
       >
         <nav
@@ -161,35 +172,22 @@ export default function PSWHistory() {
         </nav>
       </div>
 
-      {/*Main Content */}
-      <div
-        style={{
-          padding: "40px",
-          flex: 1,
-        }}
-      >
-        <h1
-          style={{
-            color: "#7ed957",
-            fontSize: "100px",
-            marginBottom: "20px",
-            fontFamily: "Monospace",
-            textAlign: "center",
+      {/* main page */}
+      <div style={{ 
+        flex: 1, 
+        padding: '40px',
+        }}>
+        <h1 
+        style={{ 
+          color: "#7ed957", 
+          fontFamily: "Monospace" 
           }}
-        >
-          {" "}
-          PSW History
-        </h1>
-
-        {/* This is the part that was missing or broken */}
-        <div
-          style={{
-            marginTop: "40px",
-          }}
-        >
-          {historyItems}
-        </div>
+          >
+            PSW History
+            </h1>
+        {/* returns no history found if no items in the list */}
+        {historyContent}
       </div>
-    </div>
+      </div>
   );
 }

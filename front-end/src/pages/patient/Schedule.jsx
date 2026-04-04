@@ -1,3 +1,5 @@
+//initalizes patient schedule front-end
+//import react components
 import { useEffect, useState } from "react"; //imports react libraries
 import { Link, useLocation } from "react-router-dom";
 
@@ -20,7 +22,8 @@ export default function PatientSchedule() {
   //These store the values of the form inputs for the new task (name, date, time) and start as empty strings
   const [selectedTask, setSelectedTask] = useState(null);
   //stores the task that is currently selected (for marking complete or cancelling), starts with no task selected
-
+  
+  //builds array for next 7 days of the week
   const weekDays = []; //array for dates
   for (let i = 0; i < 7; i += 1) {
     //for loop for days
@@ -31,6 +34,7 @@ export default function PatientSchedule() {
 
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  //converts 24 hour time into 12 hour readable labels
   function formatHour(hour) {
     if (hour === 0) {
       return "12am";
@@ -44,6 +48,7 @@ export default function PatientSchedule() {
     return hour - 12 + "pm";
   }
 
+  //fetches patient schedule from back-end
   useEffect(function () {
     const token = localStorage.getItem("token");
 
@@ -67,6 +72,7 @@ export default function PatientSchedule() {
       });
   }, []);
 
+  //handels form submission, makes sure form is validated and sends to back-end
   function handleSubmit() {
     if (
       !taskName ||
@@ -93,6 +99,7 @@ export default function PatientSchedule() {
       duration: taskTime,
     };
 
+    //sends new task to the backend
     fetch(`http://localhost:8000/schedule/?token=${token}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -120,22 +127,30 @@ export default function PatientSchedule() {
       });
   }
 
+  //builds 7 day buttons at top of schedule
   const dayButtons = []; //array for day buttons
   for (let i = 0; i < 7; i += 1) {
     const date = weekDays[i]; //grabs date from array of dates
 
-    function getBgColour() {
-      return selectedDate.toDateString() === date.toDateString()
-        ? "#547aad"
-        : "lightgray";
+    //changes background colour
+  function getBgColour() {
+    if (selectedDate.toDateString() === date.toDateString()) {
+      return "#547aad";
+    } else {
+      return "lightgray";
     }
+  }
 
+    //changes colour for selected task
     function getTextColor() {
-      return selectedDate.toDateString() === date.toDateString()
-        ? "white"
-        : "black";
+      if (selectedDate.toDateString() === date.toDateString()) {
+        return "white";
+      } else {
+        return "black";
+      }
     }
 
+    //updates selected button when clicken
     dayButtons.push(
       <div
         key={date.toDateString()}
@@ -178,6 +193,7 @@ export default function PatientSchedule() {
     );
   }
 
+  //filters list to match selected tasks and match how back-end stores data
   const filteredTasks = [];
   for (let i = 0; i < tasks.length; i += 1) {
     const task = tasks[i];
@@ -187,6 +203,7 @@ export default function PatientSchedule() {
     }
   }
 
+  //custom durations inputs when other is selected for duration
   let customTimeInput = null;
   if (showOther1) {
     customTimeInput = (
@@ -213,6 +230,7 @@ export default function PatientSchedule() {
     );
   }
 
+  //custom input but for task
   let customTaskInput = null;
   if (showOther2) {
     customTaskInput = (
@@ -237,6 +255,7 @@ export default function PatientSchedule() {
     );
   }
 
+  //if show form is true shows the add task page if false shows the calandar view
   if (showForm) {
     return (
       <div
@@ -289,7 +308,7 @@ export default function PatientSchedule() {
           </select>
         </div>
 
-        {customTaskInput}
+        {customTaskInput} {/*shows custom task input if other was selected*/}
 
         <div style={{ marginBottom: "20px" }}>
           <p style={{ fontFamily: "Monospace" }}>Insert Date:</p>
@@ -309,7 +328,8 @@ export default function PatientSchedule() {
             }}
           />
         </div>
-
+        
+        {/* duration dropdown — selecting "Other" shows the custom duration input */}
         <div style={{ marginBottom: "20px" }}>
           <p style={{ fontFamily: "Monospace" }}>Insert Start Time:</p>
           <input
@@ -354,7 +374,7 @@ export default function PatientSchedule() {
           </select>
         </div>
 
-        {customTimeInput}
+        {customTimeInput} {/* shows custom duration input only if "Other" was selected */}
 
         <div
           style={{
@@ -382,8 +402,8 @@ export default function PatientSchedule() {
 
           <button
             onClick={function () {
-              setShowForm(false);
-              setError("");
+              setShowForm(false); //hides form is false
+              setError(""); //clears error messages
             }}
             style={{
               flex: 1,
@@ -404,6 +424,7 @@ export default function PatientSchedule() {
     );
   }
 
+// calendar view showed when showForm is false
   return (
     <div style={{ display: "flex" }}>
       {/* Side Bar */}
@@ -448,10 +469,7 @@ export default function PatientSchedule() {
               borderBottom: "5px solid #325585",
               width: "100%",
               boxSizing: "border-box",
-              backgroundColor:
-                location.pathname === "/patient/schedule"
-                  ? "#325585"
-                  : "transparent",
+              backgroundColor: location.pathname === "/patient/schedule" ? "#325585" : "transparent"
             }}
           >
             Schedule
@@ -515,6 +533,7 @@ export default function PatientSchedule() {
             position: "relative",
           }}
         >
+          {/* main content */}
           <div
             style={{
               display: "flex",
@@ -526,6 +545,7 @@ export default function PatientSchedule() {
               color: "black",
             }}
           >
+            {/* header row with centered title and "add to schedule" button on the left */}
             <button
               style={{
                 borderRadius: "50%",
@@ -552,7 +572,8 @@ export default function PatientSchedule() {
             Patient Schedule
           </h1>
         </div>
-
+        
+         {/* day selector buttons row */}
         <div
           style={{
             display: "flex",
@@ -564,7 +585,8 @@ export default function PatientSchedule() {
         >
           {dayButtons}
         </div>
-
+        
+        {/*scrollable calandar grid*/}
         <div
           style={{
             overflowY: "scroll", //you can scroll if there are too many hours to fit in box
@@ -664,7 +686,7 @@ export default function PatientSchedule() {
                           // calls the complete endpoint which moves task to history and removes from schedule
                           const token = localStorage.getItem("token");
                           fetch("http://localhost:8000/schedule/" + 
-                            selectedTask.id + "/cancel?token=" + token, {
+                            selectedTask.id + "/complete?token=" + token, {
                               method: "POST",
                               headers: { "Content-Type": "application/json" },
                             },

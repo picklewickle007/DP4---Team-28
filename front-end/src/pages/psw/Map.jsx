@@ -1,23 +1,29 @@
+//initalizes patient map section of back-end
+//import statments imports data storing tools from react
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+//imports for leaflet api
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"; //imports map comps
 import 'leaflet/dist/leaflet.css'; //imports built-in styles
 import L from 'leaflet'; //imports library
 import 'leaflet-routing-machine';
  
+//deleting the default marrkers from leaflet as they are not compatible when used with vite
+//replaces with correct ions for dropper
 delete L.Icon.Default.prototype._getIconUrl; //this breaks when its used with vite
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
-//tells leaflet where to find the marker icons since the default paths are broken in vite
- 
+
+//creates constant for marker 
 const clients = [
   { id: 1, name: "Client A", address: "123 Main St, Hamilton, Ontario" },
   { id: 2, name: "Client B", address: "456 King St, Hamilton, Ontario" },
-]; //will eventually be replaced with data from the backend, but for now this is just some dummy data to show how the map works
+]; 
  
+//component that draws the route on the map
 function RoutingControl({ from, to }) {
   const map = useMap();
   useEffect(function() {
@@ -40,16 +46,17 @@ function RoutingControl({ from, to }) {
 }
  
 export default function PSWMap() {
+  //initalizes constants for sidebar, map, gps coords, etc
   const location = useLocation();
   const [markers, setMarkers] = useState([]); //iniitalizes empty array
   const [pswLocation, setPswLocation] = useState(null); //starts when you dont know psw location
   const [patient, setPatient] = useState(null);
  
-  //async waits for function to continue until it gets a response from the api, which is necessary since we need the coordinates to build the markers
+  //helps to deocde patients adress tto coordinates for the markers
   async function getCoordinates(address) {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`
-    ); //sends a request to the free geocoding api and converts characters to format and limit 1 means it returns the best match
+    ); //sends a request to the free geocoding api
     const data = await response.json();  //converts to javascript response
     if (data.length > 0) {
       return {
@@ -69,6 +76,7 @@ export default function PSWMap() {
   }
 );
  
+//builds pin for psw location
 let pswMarker = null;
 if (pswLocation) {
   pswMarker = (
@@ -77,11 +85,12 @@ if (pswLocation) {
     </Marker>
   );
 }
- 
+
+//builds client markers
 useEffect(function() { //runs once page loads
     async function buildMarkers() {
       const built = [];
-      for (let i = 0; i < clients.length; i++) {
+      for (let i = 0; i < clients.length; i=i+1) {
         const client = clients[i];
         const coords = await getCoordinates(client.address);
         if (coords) {
@@ -94,7 +103,8 @@ useEffect(function() { //runs once page loads
                 <br />
                 <button onClick={function() {
                   setPatient({ lat: coords.lat, lng: coords.lng });
-                }}>
+                }}
+                >
                   Get Directions
                 </button>
               </Popup>
@@ -128,14 +138,16 @@ useEffect(function() { //runs once page loads
         flexDirection: 'column',
         justifyContent: 'center',
         minHeight: '100vh',
-      }}>
+      }}
+      >
         <nav style={{
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#7ed957',
           height: '650px',
           width: '200px'
-        }}>
+        }}
+        >
  
           <Link to="/psw" style={{
             color: 'white',
@@ -145,7 +157,10 @@ useEffect(function() { //runs once page loads
             borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box'
-          }}>Home</Link>
+          }}
+          >
+            Home
+            </Link>
  
           <Link to="/psw/schedule" style={{
             color: 'white',
@@ -155,7 +170,10 @@ useEffect(function() { //runs once page loads
             borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box'
-          }}>Schedule</Link>
+          }}
+          >
+            Schedule
+            </Link>
  
           <Link to="/psw/history" style={{
             color: 'white',
@@ -165,7 +183,10 @@ useEffect(function() { //runs once page loads
             borderBottom: '5px solid #64a449',
             width: '100%',
             boxSizing: 'border-box'
-          }}>History</Link>
+          }}
+          >
+            History
+            </Link>
  
           <Link to="/psw/map" style={{
             color: 'white',
@@ -176,7 +197,10 @@ useEffect(function() { //runs once page loads
             width: '100%',
             boxSizing: 'border-box',
             backgroundColor: location.pathname === '/psw/map' ? '#64a449' : 'transparent'
-          }}>Map</Link>
+          }}
+          >
+            Map
+            </Link>
  
           <Link to="/psw/settings" style={{
             color: 'white',
@@ -185,7 +209,10 @@ useEffect(function() { //runs once page loads
             padding: '50px 20px',
             width: '100%',
             boxSizing: 'border-box'
-          }}>Settings</Link>
+          }}
+          >
+            Settings
+            </Link>
  
         </nav>
       </div>
@@ -194,14 +221,19 @@ useEffect(function() { //runs once page loads
       <div style={{
         flex: 1,
         padding: '20px'
-      }}>
+      }}
+      >
         <h1 style={{
           color: '#7ed957',
           fontSize: '60px',
           marginBottom: '20px',
           fontFamily: 'Monospace',
-        }}>Map</h1>
- 
+        }}
+        >
+          Map
+          </h1>
+        
+        {/*centers map at hamilton location*/}
         <MapContainer
           center={[43.2557, -79.8711]} //hamilton starting coords
           zoom={13} //zoom level
