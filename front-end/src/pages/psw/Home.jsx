@@ -1,4 +1,4 @@
-//Sets up PSW home page front end
+// Sets up PSW home page front end
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 

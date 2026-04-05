@@ -1,7 +1,9 @@
+// Sets up the Sign up page front end
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Signup() {
+    // Controlled input state for all signup fields
   const [fullname, setFullName] = useState('');
   const [age, setAge] = useState('');
   const [address, setAddress] = useState('');
@@ -9,9 +11,11 @@ export default function Signup() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
+  // Loading state while the signup request is in progress
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
+  // Validates inputs, creates an account, logs in the user and redirects to appropriate home page
   const handleSignup = async () => {
     if (!fullname || !age || !username || !password || !role) {
       alert('Please make sure all fields are filled out.');
@@ -33,6 +37,7 @@ export default function Signup() {
     try {
       let signupResponse;
 
+      // Use different endpoints and request bodies depending on the role
       if (role === 'patient') {
         signupResponse = await fetch(
           `http://localhost:8000/patients-login/signup?psw_username=${encodeURIComponent(assignedPSW)}`,
@@ -70,9 +75,14 @@ export default function Signup() {
       if (!signupResponse.ok) {
         throw new Error(signupData.detail || 'Sign up failed.');
       }
+// Logs the user in
+      const loginEndpoint =
+        role === 'patient'
+          ? 'http://localhost:8000/patients-login/login'
+          : 'http://localhost:8000/psw-login/login';
 
       const loginResponse = await fetch(
-        `http://localhost:8000/auth/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+        `${loginEndpoint}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
         { method: 'POST' },
       );
 
@@ -81,12 +91,12 @@ export default function Signup() {
       if (!loginResponse.ok) {
         throw new Error(loginData.detail || 'Account created, but login failed.');
       }
-
+// Stores the token, name, role in localStorage for use across the app
       localStorage.setItem('token', loginData.token);
       localStorage.setItem('name', loginData.name);
-      localStorage.setItem('role', loginData.role);
-
-      if (loginData.role === 'patient') {
+      localStorage.setItem('role', role);
+// Redirects to the appropriate home page based on the user's role
+      if (role === 'patient') {
         navigate('/patient');
       } else {
         navigate('/psw');
@@ -97,7 +107,7 @@ export default function Signup() {
       setIsSubmitting(false);
     }
   };
-
+// Allows the user to submit the signup form by pressing Enter key
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSignup();
@@ -115,6 +125,7 @@ export default function Signup() {
         gap: '16px',
       }}
     >
+        {/* App title */}
       <h1
         style={{
           fontFamily: 'Monospace',
@@ -133,7 +144,7 @@ export default function Signup() {
       >
         Sign-Up
       </h1>
-
+{/* Role selector: controls which set of input fields is shown below */}
       <select
         value={role}
         onChange={(e) => setRole(e.target.value)}
@@ -150,7 +161,7 @@ export default function Signup() {
         <option value="patient">Patient</option>
         <option value="psw">PSW</option>
       </select>
-
+{/* Link to log in page */}
       <p style={{ fontFamily: 'DM Sans', fontSize: '16px' }}>
         Already have an account?{' '}
         <a
@@ -165,7 +176,7 @@ export default function Signup() {
           Login
         </a>
       </p>
-
+{/* Patient signup form: only when 'patient' is selected */}
       {role === 'patient' && (
         <>
           <input
@@ -194,7 +205,7 @@ export default function Signup() {
             onKeyDown={handleKeyDown}
             style={{ padding: '10px', width: '250px', fontSize: '24px', fontFamily: 'DM Sans' }}
           />
-
+ 
           <input
             type="text"
             placeholder="Assigned PSW username"
@@ -222,36 +233,38 @@ export default function Signup() {
             style={{ padding: '10px', width: '250px', fontSize: '24px', fontFamily: 'DM Sans' }}
           />
 
-          <button
-            onClick={handleSignup}
-            disabled={isSubmitting}
-            style={{
-              padding: '10px',
-              fontSize: '24px',
-              backgroundColor: '#547aad',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: isSubmitting ? 'wait' : 'pointer',
-              opacity: isSubmitting ? 0.8 : 1,
-              fontFamily: 'DM Sans',
-            }}
-          >
-            {isSubmitting ? 'Signing Up...' : 'Sign-Up'}
-          </button>
-        </>
-      )}
+                    <button
+                        onClick={handleSignup}
+                        style={{
+                            padding: '10px',
+                            fontSize: '24px',
+                            backgroundColor: '#547aad',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontFamily: 'DM Sans'
+                        }}> Sign-Up </button>
 
-      {role === 'psw' && (
-        <>
-          <input
-            type="text"
-            placeholder="Full Name (First, Last)"
-            value={fullname}
-            onChange={(e) => setFullName(e.target.value)}
-            onKeyDown={handleKeyDown}
-            style={{ padding: '10px', width: '250px', fontSize: '23px', fontFamily: 'DM Sans' }}
-          />
+                    <p style={{ fontFamily: 'DM Sans', fontSize: '16px' }}>
+                        Already have an account?{' '}
+                        <span
+                            onClick={() => navigate('/login')}
+                            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                        >Login</span>
+                    </p>
+                </>
+            )}
+            {/* PSW signup form: only when role is 'psw' */}
+            {role === 'psw' && (
+                <>
+                    <input
+                        type='text'
+                        placeholder="Full Name (First, Last)"
+                        value={fullname}
+                        onChange={e => setFullName(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        style={{ padding: '10px', width: '250px', fontSize: '23px', fontFamily: 'DM Sans' }} />
 
           <input
             type="text"
@@ -280,25 +293,29 @@ export default function Signup() {
             style={{ padding: '10px', width: '250px', fontSize: '24px', fontFamily: 'DM Sans' }}
           />
 
-          <button
-            onClick={handleSignup}
-            disabled={isSubmitting}
-            style={{
-              padding: '10px',
-              fontSize: '24px',
-              backgroundColor: '#7ed957',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: isSubmitting ? 'wait' : 'pointer',
-              opacity: isSubmitting ? 0.8 : 1,
-              fontFamily: 'DM Sans',
-            }}
-          >
-            {isSubmitting ? 'Signing Up...' : 'Sign-Up'}
-          </button>
-        </>
-      )}
-    </div>
-  );
+                    <button
+                        onClick={handleSignup}
+                        style={{
+                            padding: '10px',
+                            fontSize: '24px',
+                            backgroundColor: '#7ed957',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontFamily: 'DM Sans'
+                        }}> Sign-Up </button>
+
+                    <p style={{ fontFamily: 'DM Sans', fontSize: '16px' }}>
+                        Already have an account?{' '}
+                        <span
+                            onClick={() => navigate('/login')}
+                            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                        >Login</span>
+                    </p>
+                </>
+            )}
+        </div>
+
+    );
 }

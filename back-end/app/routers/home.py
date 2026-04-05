@@ -67,4 +67,3 @@ def emergency_queue(token: str, session: Session = Depends(get_session)):
 def get_queue(session: Session = Depends(get_session)):
     results = session.exec(select(PSWQueue).order_by(PSWQueue.priority.desc(), PSWQueue.id)).all()
     return results
-

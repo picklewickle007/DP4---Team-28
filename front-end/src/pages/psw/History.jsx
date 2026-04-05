@@ -1,15 +1,15 @@
-//sets up psw history page's front-end 
+//sets up psw history page's front-end
 //import statments imports data storing tools from react
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-
+ 
 //exports patient history component so other files can use it
 export default function PSWHistory() {
-
+ 
   //constants to set history variable and sture the url path
   const location = useLocation();
   const [history, setHistory] = useState([]); //creates a state variable called history and a function to update it called setHistory, initialized as an empty array
-
+ 
   //runs when page loads
   useEffect(function () {
     const token = localStorage.getItem("token");
@@ -24,7 +24,7 @@ export default function PSWHistory() {
         setHistory(data); //saves data to history
       });
   }, []);
-
+ 
   const historyItems = []; //boxes you will see on screen
   for (let i = 0; i < history.length; i = i + 1) {
     const item = history[i]; //returns from backend one line at a time
@@ -68,7 +68,7 @@ export default function PSWHistory() {
       </div>
     );
   }
-
+ 
   let historyContent = <p>No history found.</p>;
     if (historyItems.length > 0) {
       historyContent = historyItems;
@@ -171,16 +171,16 @@ export default function PSWHistory() {
           </Link>
         </nav>
       </div>
-
+ 
       {/* main page */}
-      <div style={{ 
-        flex: 1, 
+      <div style={{
+        flex: 1,
         padding: '40px',
         }}>
-        <h1 
-        style={{ 
-          color: "#7ed957", 
-          fontFamily: "Monospace" 
+        <h1
+        style={{
+          color: "#7ed957",
+          fontFamily: "Monospace"
           }}
           >
             PSW History
