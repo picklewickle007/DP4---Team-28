@@ -58,17 +58,22 @@ export default function Login() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         minHeight: '100vh',
         gap: '16px',
       }}
     >
+      {/* Logo at the top of the page */}
+            <img
+        src="/UU.png"
+        alt="PSUU Logo"
+        style={{ width: '150px'}}
+      />
       <h1
         style={{
           fontFamily: 'Monospace',
-          fontSize: '80px',
-          marginTop: '-200px',
+          fontSize: '80px'
         }}
       >
         {/* App title */}
@@ -78,7 +83,7 @@ export default function Login() {
       <h1
         style={{
           fontFamily: 'DM Sans',
-          paddingTop: '80px',
+          paddingTop: '20px',
         }}
       >
         Login

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Signup() {
-    // Controlled input state for all signup fields
+  // Controlled input state for all signup fields
   const [fullname, setFullName] = useState('');
   const [age, setAge] = useState('');
   const [address, setAddress] = useState('');
@@ -75,7 +75,7 @@ export default function Signup() {
       if (!signupResponse.ok) {
         throw new Error(signupData.detail || 'Sign up failed.');
       }
-// Logs the user in
+      // Logs the user in
       const loginEndpoint =
         role === 'patient'
           ? 'http://localhost:8000/patients-login/login'
@@ -91,11 +91,11 @@ export default function Signup() {
       if (!loginResponse.ok) {
         throw new Error(loginData.detail || 'Account created, but login failed.');
       }
-// Stores the token, name, role in localStorage for use across the app
+      // Stores the token, name, role in localStorage for use across the app
       localStorage.setItem('token', loginData.token);
       localStorage.setItem('name', loginData.name);
       localStorage.setItem('role', role);
-// Redirects to the appropriate home page based on the user's role
+      // Redirects to the appropriate home page based on the user's role
       if (role === 'patient') {
         navigate('/patient');
       } else {
@@ -107,7 +107,7 @@ export default function Signup() {
       setIsSubmitting(false);
     }
   };
-// Allows the user to submit the signup form by pressing Enter key
+  // Allows the user to submit the signup form by pressing Enter key
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSignup();
@@ -119,18 +119,22 @@ export default function Signup() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         minHeight: '100vh',
         gap: '16px',
       }}
     >
-        {/* App title */}
+      {/* App title */}
+            <img
+        src="/UU.png"
+        alt="PSUU Logo"
+        style={{ width: '150px'}}
+      />
       <h1
         style={{
           fontFamily: 'Monospace',
-          fontSize: '80px',
-          marginTop: '-200px',
+          fontSize: '80px'
         }}
       >
         Welcome to PSUU
@@ -139,17 +143,17 @@ export default function Signup() {
       <h1
         style={{
           fontFamily: 'DM Sans',
-          paddingTop: '80px',
+          paddingTop: '50px'
         }}
       >
         Sign-Up
       </h1>
-{/* Role selector: controls which set of input fields is shown below */}
+      {/* Role selector: controls which set of input fields is shown below */}
       <select
         value={role}
         onChange={(e) => setRole(e.target.value)}
         style={{
-          padding: '10px',
+          padding: '0',
           width: '250px',
           fontSize: '24px',
           fontFamily: 'DM Sans',
@@ -161,7 +165,7 @@ export default function Signup() {
         <option value="patient">Patient</option>
         <option value="psw">PSW</option>
       </select>
-{/* Link to log in page */}
+      {/* Link to log in page */}
       <p style={{ fontFamily: 'DM Sans', fontSize: '16px' }}>
         Already have an account?{' '}
         <a
@@ -176,7 +180,7 @@ export default function Signup() {
           Login
         </a>
       </p>
-{/* Patient signup form: only when 'patient' is selected */}
+      {/* Patient signup form: only when 'patient' is selected */}
       {role === 'patient' && (
         <>
           <input
@@ -205,7 +209,7 @@ export default function Signup() {
             onKeyDown={handleKeyDown}
             style={{ padding: '10px', width: '250px', fontSize: '24px', fontFamily: 'DM Sans' }}
           />
- 
+
           <input
             type="text"
             placeholder="Assigned PSW username"
@@ -233,38 +237,38 @@ export default function Signup() {
             style={{ padding: '10px', width: '250px', fontSize: '24px', fontFamily: 'DM Sans' }}
           />
 
-                    <button
-                        onClick={handleSignup}
-                        style={{
-                            padding: '10px',
-                            fontSize: '24px',
-                            backgroundColor: '#547aad',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            fontFamily: 'DM Sans'
-                        }}> Sign-Up </button>
+          <button
+            onClick={handleSignup}
+            style={{
+              padding: '10px',
+              fontSize: '24px',
+              backgroundColor: '#547aad',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontFamily: 'DM Sans'
+            }}> Sign-Up </button>
 
-                    <p style={{ fontFamily: 'DM Sans', fontSize: '16px' }}>
-                        Already have an account?{' '}
-                        <span
-                            onClick={() => navigate('/login')}
-                            style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                        >Login</span>
-                    </p>
-                </>
-            )}
-            {/* PSW signup form: only when role is 'psw' */}
-            {role === 'psw' && (
-                <>
-                    <input
-                        type='text'
-                        placeholder="Full Name (First, Last)"
-                        value={fullname}
-                        onChange={e => setFullName(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        style={{ padding: '10px', width: '250px', fontSize: '23px', fontFamily: 'DM Sans' }} />
+          <p style={{ fontFamily: 'DM Sans', fontSize: '16px' }}>
+            Already have an account?{' '}
+            <span
+              onClick={() => navigate('/login')}
+              style={{ cursor: 'pointer', textDecoration: 'underline' }}
+            >Login</span>
+          </p>
+        </>
+      )}
+      {/* PSW signup form: only when role is 'psw' */}
+      {role === 'psw' && (
+        <>
+          <input
+            type='text'
+            placeholder="Full Name (First, Last)"
+            value={fullname}
+            onChange={e => setFullName(e.target.value)}
+            onKeyDown={handleKeyDown}
+            style={{ padding: '10px', width: '250px', fontSize: '23px', fontFamily: 'DM Sans' }} />
 
           <input
             type="text"
@@ -293,29 +297,29 @@ export default function Signup() {
             style={{ padding: '10px', width: '250px', fontSize: '24px', fontFamily: 'DM Sans' }}
           />
 
-                    <button
-                        onClick={handleSignup}
-                        style={{
-                            padding: '10px',
-                            fontSize: '24px',
-                            backgroundColor: '#7ed957',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            fontFamily: 'DM Sans'
-                        }}> Sign-Up </button>
+          <button
+            onClick={handleSignup}
+            style={{
+              padding: '10px',
+              fontSize: '24px',
+              backgroundColor: '#7ed957',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontFamily: 'DM Sans'
+            }}> Sign-Up </button>
 
-                    <p style={{ fontFamily: 'DM Sans', fontSize: '16px' }}>
-                        Already have an account?{' '}
-                        <span
-                            onClick={() => navigate('/login')}
-                            style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                        >Login</span>
-                    </p>
-                </>
-            )}
-        </div>
+          <p style={{ fontFamily: 'DM Sans', fontSize: '16px' }}>
+            Already have an account?{' '}
+            <span
+              onClick={() => navigate('/login')}
+              style={{ cursor: 'pointer', textDecoration: 'underline' }}
+            >Login</span>
+          </p>
+        </>
+      )}
+    </div>
 
-    );
+  );
 }
