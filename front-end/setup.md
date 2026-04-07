@@ -194,7 +194,7 @@ export default function PatientSchedule() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/schedule")
+    fetch("https://dp4-team-28-production.up.railway.app/schedule")
       .then(res => res.json())
       .then(data => setTasks(data));
   }, []);

@@ -56,7 +56,7 @@ export default function PatientSchedule() {
       return;
     }
 
-    fetch(`http://localhost:8000/schedule/?token=${token}`)
+    fetch(`https://dp4-team-28-production.up.railway.app/schedule/?token=${token}`)
       .then(function (res) {
         return res.json();
       })
@@ -100,7 +100,7 @@ export default function PatientSchedule() {
     };
 
     //sends new task to the backend
-    fetch(`http://localhost:8000/schedule/?token=${token}`, {
+    fetch(`https://dp4-team-28-production.up.railway.app/schedule/?token=${token}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newTask),
@@ -685,7 +685,7 @@ export default function PatientSchedule() {
                         onClick={function () {
                           // calls the complete endpoint which moves task to history and removes from schedule
                           const token = localStorage.getItem("token");
-                          fetch("http://localhost:8000/schedule/" + 
+                          fetch("https://dp4-team-28-production.up.railway.app/schedule/" + 
                             selectedTask.id + "/complete?token=" + token, {
                               method: "POST",
                               headers: { "Content-Type": "application/json" },
@@ -725,7 +725,7 @@ export default function PatientSchedule() {
                         onClick={function () {
                           // calls the cancel endpoint which moves task to history as cancelled and removes from schedule
                           const token = localStorage.getItem("token");
-                          fetch("http://localhost:8000/schedule/" + 
+                          fetch("https://dp4-team-28-production.up.railway.app/schedule/" + 
                             selectedTask.id + 
                             "/cancel?token=" + 
                             token, 

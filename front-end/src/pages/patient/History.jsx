@@ -16,7 +16,7 @@ export default function PatientHistory() {
     if (!token) {
       return;
     }
-    fetch("http://localhost:8000/history/patient?token=" + token)
+    fetch("https://dp4-team-28-production.up.railway.app/history/patient?token=" + token)
       .then(function (res) {
         return res.json();
       })

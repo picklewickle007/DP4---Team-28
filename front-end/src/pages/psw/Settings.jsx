@@ -132,7 +132,7 @@ export default function PSWSettings() {
     setIsLoadingProfile(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/psw-login/profile?token=${token}`);
+      const response = await fetch(`https://dp4-team-28-production.up.railway.app/psw-login/profile?token=${token}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -204,7 +204,7 @@ export default function PSWSettings() {
     setIsSavingProfile(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/psw-login/profile-update?token=${token}`, {
+      const response = await fetch(`https://dp4-team-28-production.up.railway.app/psw-login/profile-update?token=${token}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -22,7 +22,7 @@ export default function PatientHome() {
       return;
     }
 
-    fetch(`http://localhost:8000/home/queue/status/?token=${token}`)
+    fetch(`https://dp4-team-28-production.up.railway.app/home/queue/status/?token=${token}`)
       .then(async (response) => {
         const data = await response.json();
 
@@ -57,7 +57,7 @@ export default function PatientHome() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/home/queue/?token=${token}`,
+        `https://dp4-team-28-production.up.railway.app/home/queue/?token=${token}`,
         {
           method: isInQueue ? "DELETE" : "POST",
         },
@@ -100,8 +100,8 @@ export default function PatientHome() {
 
     try {
       const endpoint = isEmergencyActive
-        ? `http://localhost:8000/home/queue/?token=${token}`
-        : `http://localhost:8000/home/queue/emergency/?token=${token}`;
+        ? `https://dp4-team-28-production.up.railway.app/home/queue/?token=${token}`
+        : `https://dp4-team-28-production.up.railway.app/home/queue/emergency/?token=${token}`;
 
       const response = await fetch(endpoint, {
         method: isEmergencyActive ? "DELETE" : "POST",

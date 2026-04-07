@@ -133,7 +133,7 @@ export default function PatientSettings() {
     setIsLoadingProfile(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/patients-login/profile?token=${token}`);
+      const response = await fetch(`https://dp4-team-28-production.up.railway.app/patients-login/profile?token=${token}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -208,7 +208,7 @@ export default function PatientSettings() {
     setIsSavingProfile(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/patients-login/profile-update?token=${token}`, {
+      const response = await fetch(`https://dp4-team-28-production.up.railway.app/patients-login/profile-update?token=${token}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

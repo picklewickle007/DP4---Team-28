@@ -21,7 +21,7 @@ export default function PSWHome() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/psw-home/queue/emergencies?token=${token}`);
+      const response = await fetch(`https://dp4-team-28-production.up.railway.app/psw-home/queue/emergencies?token=${token}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -49,7 +49,7 @@ export default function PSWHome() {
     setIsQueueLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/psw-home/queue?token=${token}`);
+      const response = await fetch(`https://dp4-team-28-production.up.railway.app/psw-home/queue?token=${token}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -77,7 +77,7 @@ export default function PSWHome() {
     setIsAlertsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8000/psw-home/queue/emergencies?token=${token}`);
+      const response = await fetch(`https://dp4-team-28-production.up.railway.app/psw-home/queue/emergencies?token=${token}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -113,8 +113,8 @@ export default function PSWHome() {
       //Use different endpoints depending on whether it is an emergency or regular request
       const endpoint =
         type === 'alerts'
-          ? `http://localhost:8000/psw-home/queue/emergency/complete/${nextPatient.id}?token=${token}`
-          : `http://localhost:8000/psw-home/queue/complete/${nextPatient.id}?token=${token}`;
+          ? `https://dp4-team-28-production.up.railway.app/psw-home/queue/emergency/complete/${nextPatient.id}?token=${token}`
+          : `https://dp4-team-28-production.up.railway.app/psw-home/queue/complete/${nextPatient.id}?token=${token}`;
 
       const response = await fetch(
         endpoint,

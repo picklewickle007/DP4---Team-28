@@ -40,7 +40,7 @@ export default function PSWSchedule() {
     if (!token) {
       return;
     }
-    fetch("http://localhost:8000/schedule/psw?token=" + token)
+    fetch("https://dp4-team-28-production.up.railway.app/schedule/psw?token=" + token)
       .then(function (res) {
         return res.json();
       })
@@ -52,7 +52,7 @@ export default function PSWSchedule() {
         for (let i = 0; i < data.length; i = i + 1) {
           const task = data[i];
           const patientRes = await fetch(
-            "http://localhost:8000/patients-login/" + task.patient_id
+            "https://dp4-team-28-production.up.railway.app/patients-login/" + task.patient_id
           );
           const patient = await patientRes.json();
 
@@ -215,7 +215,7 @@ export default function PSWSchedule() {
           onClick={function () {
             // calls the complete endpoint which moves task to history and removes from schedule
             const token = localStorage.getItem("token");
-            fetch("http://localhost:8000/schedule/" + selectedTask.id + "/complete?token=" + token, {
+            fetch("https://dp4-team-28-production.up.railway.app/schedule/" + selectedTask.id + "/complete?token=" + token, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
             })

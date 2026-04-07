@@ -16,7 +16,7 @@ export default function PSWHistory() {
     if (!token) {
       return;
     }
-    fetch("http://localhost:8000/history/psw?token=" + token) //sends a GET request to the backend with token
+    fetch("https://dp4-team-28-production.up.railway.app/history/psw?token=" + token) //sends a GET request to the backend with token
       .then(function (res) {
         return res.json();
       }) //converts data to javascript

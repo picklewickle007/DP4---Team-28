@@ -5,8 +5,7 @@ SQLite as the database, stored locally in a file called app.db.
 
 from sqlmodel import create_engine, Session
 
-# creates a local SQLite file named 'app.db'
-sqlite_url = "sqlite:///./app.db"
+sqlite_url = "sqlite:////tmp/app.db"
 engine = create_engine(sqlite_url, connect_args={"check_same_thread": False})
 
 def get_session():

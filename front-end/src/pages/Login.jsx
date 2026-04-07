@@ -21,7 +21,7 @@ export default function Login() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/auth/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+        `https://dp4-team-28-production.up.railway.app/auth/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
         { method: 'POST' },
       );
 

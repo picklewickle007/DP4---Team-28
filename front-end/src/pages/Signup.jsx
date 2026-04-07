@@ -40,7 +40,7 @@ export default function Signup() {
       // Use different endpoints and request bodies depending on the role
       if (role === 'patient') {
         signupResponse = await fetch(
-          `http://localhost:8000/patients-login/signup?psw_username=${encodeURIComponent(assignedPSW)}`,
+          `https://dp4-team-28-production.up.railway.app/patients-login/signup?psw_username=${encodeURIComponent(assignedPSW)}`,
           {
             method: 'POST',
             headers: {
@@ -56,7 +56,7 @@ export default function Signup() {
           },
         );
       } else {
-        signupResponse = await fetch('http://localhost:8000/psw-login/signup', {
+        signupResponse = await fetch('https://dp4-team-28-production.up.railway.app/psw-login/signup', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -78,8 +78,8 @@ export default function Signup() {
       // Logs the user in
       const loginEndpoint =
         role === 'patient'
-          ? 'http://localhost:8000/patients-login/login'
-          : 'http://localhost:8000/psw-login/login';
+          ? 'https://dp4-team-28-production.up.railway.app/patients-login/login'
+          : 'https://dp4-team-28-production.up.railway.app/psw-login/login';
 
       const loginResponse = await fetch(
         `${loginEndpoint}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
